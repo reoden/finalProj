@@ -6,7 +6,7 @@
         :loading="loading"
         :data="guestList"
         type="guest"
-        @showDetail="showDetail"
+        @show-detail="showDetail"
       />
     </div>
   </div>
@@ -31,20 +31,22 @@
     if (newVal === 'zh-CN') {
       guestList.value = originGuestList.value;
     } else {
-      guestList.value = originGuestList.value.map(((item: any) => {
+      guestList.value = originGuestList.value.map((item: any) => {
         return {
           ...item,
-          ...item.en
+          ...item.en,
         };
-      }));
+      });
     }
-  }
+  };
 
   // 获取列表数据
   const fetchData = async () => {
     toggleLoading();
     try {
-      const { data: { code, body } } = await SavorApi.guestList();
+      const {
+        data: { code, body },
+      } = await SavorApi.guestList();
       if (code === 0) {
         originGuestList.value = body?.apps;
         changeLangue(globalStore.langue);
@@ -58,16 +60,19 @@
     router.push({
       name: 'guestDetail',
       query: {
-        id: item.id
+        id: item.id,
       },
     });
-  }
+  };
 
   onMounted(() => {
     fetchData();
-    watch(() => globalStore.langue, (newVal) => {
-      changeLangue(newVal);
-    });
+    watch(
+      () => globalStore.langue,
+      (newVal) => {
+        changeLangue(newVal);
+      }
+    );
   });
 </script>
 
@@ -85,10 +90,10 @@
       overflow-y: auto;
       width: 100%;
       // height: calc(100% - 80px);
-      background: #20222C;
+      background: #20222c;
       position: relative;
       display: flex;
       justify-content: center;
     }
-  }
-</style>./components/list.vue
+  }</style
+>./components/list.vue

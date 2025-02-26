@@ -10,8 +10,8 @@
       </div>
       <div class="nameEdit">
         <div>菜单名修改</div>
-        <a-input class="input" v-model="chefName" :disabled="!isEdit"></a-input>
-        <a-button @click="editName" :loading="editLoading">{{ isEdit ? '保存' : '编辑' }}</a-button>
+        <a-input v-model="chefName" class="input" :disabled="!isEdit"></a-input>
+        <a-button :loading="editLoading" @click="editName">{{ isEdit ? '保存' : '编辑' }}</a-button>
       </div>
       <div class="table">
         <a-table
@@ -30,7 +30,8 @@
             <img
               class="handle"
               :src="iconDropImage"
-              style="width: 15px; height: 15px; object-fit: contain" />
+              style="width: 15px; height: 15px; object-fit: contain"
+            />
           </template>
         </a-table>
       </div>
@@ -39,21 +40,22 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, onMounted, computed } from 'vue';
-  import { useI18n } from 'vue-i18n';
-  import Sortable from 'sortablejs'
-  import useLoading from '@/hooks/loading';
   import SavorApi from '@/api/savor';
-  import MenuBar from '@/components/menu-bar/index.vue';
-  import iconDropImage from '@/assets/images/icon-drop.png';
-  import { Message, Modal } from '@arco-design/web-vue';
-  import { useRouter } from 'vue-router';
+import iconDropImage from '@/assets/images/icon-drop.png';
+import MenuBar from '@/components/menu-bar/index.vue';
+import useLoading from '@/hooks/loading';
+import { Message, Modal } from '@arco-design/web-vue';
+import Sortable from 'sortablejs';
+import { computed, onMounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 
   const router = useRouter();
   const { t } = useI18n();
   const chefList = ref<any>([]);
   const { loading, toggle: toggleLoading } = useLoading(false);
   const { loading: editLoading, toggle: toggleEditLoading } = useLoading(false);
+  const showChef = ref<any>(false);
   const chefName = ref('名厨采访');
   const isEdit = ref(false);
 
@@ -73,7 +75,7 @@
       {
         title: t('chef.colunm.describe'),
         dataIndex: 'describe',
-        ellipsis: true
+        ellipsis: true,
       },
       {
         dataIndex: 'operate',
@@ -98,7 +100,9 @@
   const fetchData = async () => {
     toggleLoading();
     try {
-      const { data: { code, body } } = await SavorApi.chefList();
+      const {
+        data: { code, body },
+      } = await SavorApi.chefList();
       if (code === 0) {
         chefList.value = body?.apps;
         const tbody: any = document.querySelector('.table .arco-table tbody');
@@ -107,16 +111,18 @@
           animation: 150,
           // 需要在odEnd方法中处理原始eltable数据, 使原始数据与显示数据保持顺序一致
           onEnd: async (evt) => {
-            const { newIndex, oldIndex } : any = evt;
+            const { newIndex, oldIndex }: any = evt;
             // 拖拽后接口保存排序后的位置
             const tableData = JSON.parse(JSON.stringify(chefList.value));
             const targetRow = tableData[oldIndex];
-            tableData.splice(oldIndex, 1)
-            tableData.splice (newIndex, 0, targetRow);
+            tableData.splice(oldIndex, 1);
+            tableData.splice(newIndex, 0, targetRow);
             chefList.value = tableData;
             try {
               const appIds = tableData.map((item: any) => item.id);
-              const { data: { code: codeSec  } } = await SavorApi.changeChef({ app_ids: appIds });
+              const {
+                data: { code: codeSec },
+              } = await SavorApi.changeChef({ app_ids: appIds });
               if (codeSec !== 0) {
                 // 保存失败后，撤回本次拖拽
                 returnDrop(evt);
@@ -124,7 +130,7 @@
             } catch (error) {
               returnDrop(evt);
             }
-          }
+          },
         });
       }
     } finally {
@@ -136,41 +142,46 @@
     router.push({
       name: 'chefBackDetail',
     });
-  }
+  };
 
   const edit = (record: any) => {
     router.push({
       name: 'chefBackDetail',
       query: {
-        id: record.id
+        id: record.id,
       },
     });
-  }
+  };
 
   const del = (row?: any) => {
     Modal.confirm({
       content: `确认删除厨师 ${row.name} 吗?`,
       okText: '确定',
       async onOk() {
-        const { data: { code } } = await SavorApi.deleteChef(row.id);
+        const {
+          data: { code },
+        } = await SavorApi.deleteChef(row.id);
         if (code === 0) {
           Message.success('删除成功');
           fetchData();
         }
       },
     });
-  }
+  };
 
-  const fetchSwitch = async() => {
+  const fetchSwitch = async () => {
     try {
-      const { data: { code, body } } = await SavorApi.prizeConfig();
+      const {
+        data: { code, body },
+      } = await SavorApi.prizeConfig();
       if (code === 0) {
+        showChef.value = !!body.prize;
         chefName.value = body.chef_name;
       }
-    } finally { 
-      console.log()
+    } finally {
+      console.log();
     }
-  }
+  };
 
   const editName = async() => {
     if (isEdit.value) {

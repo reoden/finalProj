@@ -33,17 +33,19 @@
     } else {
       detail.value = {
         ...originDetail.value,
-        ...originDetail.value.en
+        ...originDetail.value.en,
       };
     }
-  }
+  };
 
   // 获取厨师列表数据
   const fetchData = async () => {
     toggleLoading();
     const { id } = router.currentRoute.value.query;
     try {
-      const { data: { code, body } } = await SavorApi.guestDetail(id);
+      const {
+        data: { code, body },
+      } = await SavorApi.guestDetail(id);
       if (code === 0) {
         originDetail.value = body;
         changeLangue(globalStore.langue);
@@ -52,16 +54,19 @@
       toggleLoading();
     }
   };
-  
+
   const handleBack = () => {
     router.push({ name: 'guestList' });
-  }
+  };
 
   onMounted(() => {
     fetchData();
-    watch(() => globalStore.langue, (newVal) => {
-      changeLangue(newVal);
-    });
+    watch(
+      () => globalStore.langue,
+      (newVal) => {
+        changeLangue(newVal);
+      }
+    );
   });
 </script>
 
@@ -76,7 +81,7 @@
 
     .content {
       width: 100%;
-      background: #20222C;
+      background: #20222c;
       position: relative;
       display: flex;
       justify-content: center;

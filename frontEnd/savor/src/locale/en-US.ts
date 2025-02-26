@@ -35,18 +35,22 @@ export default {
   'settled.form.pic.validator1': 'Required Image',
   'settled.form.pic.del': 'Sure to delete this image?',
   'settled.form.name': 'Restaurant Name',
-  'settled.form.name.placeholder': 'Please enter the restaurant name, branch name',
+  'settled.form.name.placeholder':
+    'Please enter the restaurant name, branch name',
   'settled.form.name.validator': 'Required Restaurant Name',
   'settled.form.address': 'Address',
   'settled.form.province.placeholder': 'Province/City/District',
-  'settled.form.address.placeholder': 'Please enter the detailed address, e.g., 505 Nanjing East Road, 4th floor, Helen Hotel, Shanghai',
+  'settled.form.address.placeholder':
+    'Please enter the detailed address, e.g., 505 Nanjing East Road, 4th floor, Helen Hotel, Shanghai',
   'settled.form.address.validator': 'Required Address',
   'settled.form.province.validator': 'Select Province/City/District',
   'settled.form.describe': 'Restaurant Introduction',
-  'settled.form.describe.placeholder': 'Please enter a detailed restaurant introduction',
+  'settled.form.describe.placeholder':
+    'Please enter a detailed restaurant introduction',
   'settled.form.describe.validator': 'Required Restaurant Introduction',
   'settled.form.phone': 'Tel',
-  'settled.form.phone.placeholder': '+86 Please enter the restaurant phone number',
+  'settled.form.phone.placeholder':
+    '+86 Please enter the restaurant phone number',
   'settled.form.phone.validator': 'Required TEL',
   'settled.form.phone.validator1': 'Wrong TEL',
   'settled.form.time': 'Business Hours',
@@ -65,7 +69,8 @@ export default {
   'settled.form.rate.placeholder': 'Please enter rate',
   'settled.form.rate.validator': 'Required Rate',
   'settled.form.introduction': 'Desc',
-  'settled.form.introduction.placeholder': 'Please describe the restaurant in one sentence',
+  'settled.form.introduction.placeholder':
+    'Please describe the restaurant in one sentence',
   'settled.form.introduction.validator': 'Required Desc',
   'settled.form.leixing': 'Restaurant type',
   'settled.form.leixing.placeholder': 'Please select restaurant type',
@@ -117,7 +122,6 @@ export default {
   'settled.form.detail_lable': 'More',
   'settled.form.detail_lable_1': 'Detail',
 
-
   'settled.detail.pic': 'Image',
   'settled.detail.status': 'Current Status',
   'settled.detail.operate': 'Action',
@@ -135,7 +139,7 @@ export default {
   'savor.login.form.code.get': 'Get code',
   'savor.login.form.code.error': 'Code wrong Or expired',
   'savor.login.form.code.validator': 'Code wrong',
-  
+
   'nav.restaurant.title': 'Restaurants',
   'nav.chef.title': 'Interview',
   'nav.guest.title': 'Advisor',

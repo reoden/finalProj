@@ -5,7 +5,11 @@
       :selected-keys="selectedKey"
       :show-collapse-button="false"
     >
-      <a-menu-item v-for="menu in meunData" :key="menu.name" @click="goTo(menu.name)">
+      <a-menu-item
+        v-for="menu in meunData"
+        :key="menu.name"
+        @click="goTo(menu.name)"
+      >
         {{ t(menu.lable) }}
       </a-menu-item>
     </a-menu>
@@ -13,10 +17,10 @@
 </template>
 
 <script lang="ts" setup>
-  import {  watch, ref } from 'vue';
-  import { useI18n } from 'vue-i18n';
-  import { useRoute, useRouter } from 'vue-router';
   import { useUserStore } from '@/store';
+import { ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRoute, useRouter } from 'vue-router';
 
   const { t, locale } = useI18n();
   const route = useRoute();
@@ -31,31 +35,36 @@
       type: Boolean,
       default() {
         return false;
-      }
-    }
+      },
+    },
   });
-  const meunData = ref<any>([{
-    key: 'app_name',
-    title: 'nav.restaurant.title',
-    lable: isCn ? userInfo.menuInfo?.app_name : 'nav.restaurant.title',
-    name: 'home',
-  }, {
-    key: 'chef_name',
-    title: 'nav.chef.title',
-    lable: isCn ? userInfo.menuInfo?.chef_name : 'nav.chef.title',
-    name: 'chefList',
-  }, {
-    key: 'guest_name',
-    title: 'nav.guest.title',
-    lable: isCn ? userInfo.menuInfo?.guest_name : 'nav.guest.title',
-    name: 'guestList',
-  }, {
-    key: 'news_name',
-    title: 'nav.news.title',
-    lable: isCn ? userInfo.menuInfo?.news_name : 'nav.news.title',
-    name: 'newsList',
-  }]);
-  
+  const meunData = ref<any>([
+    {
+      key: 'app_name',
+      title: 'nav.restaurant.title',
+      lable: isCn ? userInfo.menuInfo?.app_name : 'nav.restaurant.title',
+      name: 'home',
+    },
+    // {
+    //   key: 'chef_name',
+    //   title: 'nav.chef.title',
+    //   lable: isCn ? userInfo.menuInfo?.chef_name : 'nav.chef.title',
+    //   name: 'chefList',
+    // },
+    // {
+    //   key: 'guest_name',
+    //   title: 'nav.guest.title',
+    //   lable: isCn ? userInfo.menuInfo?.guest_name : 'nav.guest.title',
+    //   name: 'guestList',
+    // },
+    // {
+    //   key: 'news_name',
+    //   title: 'nav.news.title',
+    //   lable: isCn ? userInfo.menuInfo?.news_name : 'nav.news.title',
+    //   name: 'newsList',
+    // },
+  ]);
+
   if (userInfo.showPrize) {
     meunData.value.splice(1, 0, {
       key: 'prize_name',
@@ -73,9 +82,9 @@
         title: item.title,
         lable: isCns ? userInfo.menuInfo[item.key] : item.title,
         name: item.name,
-      }
+      };
     });
-  }
+  };
 
   watch(
     () => props.lang,
@@ -86,8 +95,7 @@
 
   const goTo = (name: string) => {
     router.push({ name });
-  }
-
+  };
 </script>
 
 <style scoped lang="less">
@@ -105,7 +113,7 @@
     }
 
     :deep(.arco-menu) {
-      background: #272A37;
+      background: #272a37;
       .arco-menu-inner {
         padding: 4px 16px;
       }
@@ -122,11 +130,11 @@
       }
 
       .arco-menu-selected {
-        background: #272A37;
+        background: #272a37;
         color: #fff;
         border-radius: 5px;
         &:hover {
-          background: #272A37!important;
+          background: #272a37 !important;
         }
       }
 
@@ -142,7 +150,7 @@
       left: 50%;
       transform: translateX(-50%);
       white-space: nowrap;
-      border: 1px solid #FFFFFF;
+      border: 1px solid #ffffff;
       border-radius: 25px;
       padding: 5px 16px;
       display: flex;

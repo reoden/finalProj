@@ -3,21 +3,26 @@
     <div class="item" @click="goTo">
       {{ nav.settled }}
     </div>
-    <a-trigger v-if="nav.login" trigger="click" position="top" :popup-translate="[0, 5]">
+    <a-trigger
+      v-if="nav.login"
+      trigger="click"
+      position="top"
+      :popup-translate="[0, 5]"
+    >
       <div class="item user">
-        <img :src="userImage" alt="">
+        <img :src="userImage" alt="" />
         <span v-if="!mobile">{{ nav.showPhone }}</span>
       </div>
       <template #content>
         <div class="trigger-demo-nest">
-          <a-button @click="logout">{{  $t('savor.logout.title') }}</a-button>
+          <a-button @click="logout">{{ $t('savor.logout.title') }}</a-button>
         </div>
       </template>
     </a-trigger>
     <div v-else class="item" @click="login">
       <span v-if="!nav.login">{{ nav.loginText }}</span>
     </div>
-    <img class="lang" :src="navImage" alt="" @click="changeLangue">
+    <img class="lang" :src="navImage" alt="" @click="changeLangue" />
     <Login ref="loginRef" :mobile="mobile" />
   </div>
 </template>
@@ -33,7 +38,7 @@
   import Login from '@/components/login/index.vue';
   import { useUserStore, useAppStore } from '@/store';
   import { clearToken } from '@/utils/auth';
-  import { isMoblie }from '@/utils';
+  import { isMoblie } from '@/utils';
 
   const userInfo = useUserStore();
   const useApp = useAppStore();
@@ -42,16 +47,14 @@
   const loginRef = ref(null);
   const pattern = /^(\d{3})\d{4}(\d{4})$/;
   const mobile = computed(() => isMoblie());
-  const nav = computed(() => 
-    {
-      return {
-        login: isLogin(),
-        loginText: t('home.nav.login'),
-        settled: t('home.nav.settled'),
-        showPhone: userInfo.phone && userInfo.phone.replace(pattern, '$1****$2')
-      }
-    }
-  );
+  const nav = computed(() => {
+    return {
+      login: isLogin(),
+      loginText: t('home.nav.login'),
+      settled: t('home.nav.settled'),
+      showPhone: userInfo.phone && userInfo.phone.replace(pattern, '$1****$2'),
+    };
+  });
   const { changeLocale, currentLocale } = useLocale();
   const emit = defineEmits(['change']);
 
@@ -66,7 +69,7 @@
     changeLocale(cn);
     emit('change');
     useApp.toggleLangue(cn);
-  }
+  };
 
   const login = () => {
     if (isLogin()) {
@@ -75,7 +78,7 @@
     if (loginRef.value) {
       loginRef.value.showModal();
     }
-  }
+  };
 
   const goTo = () => {
     if (!isLogin()) {
@@ -83,7 +86,7 @@
       return;
     }
     router.push({ name: 'settled' });
-  }
+  };
 
   const logout = () => {
     clearToken();
@@ -92,11 +95,10 @@
     } else {
       router.push({ name: 'home' });
     }
-  }
+  };
 </script>
 
 <style lang="less" scoped>
-
   .nav {
     display: flex;
     height: 100%;
@@ -105,7 +107,7 @@
     font-weight: 600;
     line-height: 21.45px;
     text-align: center;
-    color: #FFFFFF;
+    color: #ffffff;
     align-items: center;
 
     .item {
@@ -113,7 +115,7 @@
       padding: 3px 8px;
       cursor: pointer;
       &:hover {
-        background: #3A3E4D;
+        background: #3a3e4d;
       }
       &:first-child {
         margin-left: 0px;
@@ -122,7 +124,7 @@
     }
 
     .user {
-      border: 1px solid #FFFFFF;
+      border: 1px solid #ffffff;
       border-radius: 25px;
       padding: 5px 16px;
       display: flex;
@@ -134,7 +136,7 @@
         margin-right: 5px;
       }
       &:hover {
-        background: #272A37;
+        background: #272a37;
       }
     }
 
@@ -146,12 +148,12 @@
     }
   }
 
-  .mobile  {
+  .mobile {
     .item {
       font-size: 14px;
       padding: 3px 0px;
       &:hover {
-        background: #272A37;
+        background: #272a37;
       }
     }
     .user {

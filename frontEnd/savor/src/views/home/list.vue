@@ -5,17 +5,33 @@
       <div class="city" :class="{ mobile: mobile }">
         <div class="title">{{ $t('nav.list.city.title') }}</div>
         <div class="list">
-          <div v-for="city in hotCity" :key="city.cnLabel" class="item" :class="{ selected : city.cnLabel === selectedCity }" @click="selectCity(city.cnLabel)">
+          <div
+            v-for="city in hotCity"
+            :key="city.cnLabel"
+            class="item"
+            :class="{ selected: city.cnLabel === selectedCity }"
+            @click="selectCity(city.cnLabel)"
+          >
             {{ city.label }}
           </div>
-          <a-popover :popup-visible="visible" trigger="click" :content-class="contentClass" arrow-class="city-arrow" position="bottom">
-            <a-button @click="showCityMore">{{ $t('nav.list.city.more') }}</a-button>
+          <a-popover
+            :popup-visible="visible"
+            trigger="click"
+            :content-class="contentClass"
+            arrow-class="city-arrow"
+            position="bottom"
+          >
+            <a-button @click="showCityMore">{{
+              $t('nav.list.city.more')
+            }}</a-button>
             <template #content>
               <div
-                v-for="item in addressOption" 
-                :key="item.label" class="city_label"
-                :class="{ selected : item.label === selectedCity }"
-                @click="selectCity(item.label)">
+                v-for="item in addressOption"
+                :key="item.label"
+                class="city_label"
+                :class="{ selected: item.label === selectedCity }"
+                @click="selectCity(item.label)"
+              >
                 <span>{{ item.label }}</span>
               </div>
             </template>
@@ -28,7 +44,12 @@
           :placeholder="$t('home.con.search1')"
         >
           <template #suffix>
-            <img class="search-icon" :src="SearchIcon" alt="" @click="searchVal()">
+            <img
+              class="search-icon"
+              :src="SearchIcon"
+              alt=""
+              @click="searchVal()"
+            />
           </template>
         </a-input-search>
       </div>
@@ -38,18 +59,26 @@
         :data="searchList"
         :bottom="isBottom"
         type="shop"
-        @fetchData="searchData"
-        @showDetail="showDetail"
+        @fetch-data="searchData"
+        @show-detail="showDetail"
       />
       <div v-else class="shop-con">
-        <div v-for="item of searchList" :key="item.id" class="list-item" @click="showDetail(item)">
-          <img class="img" :src="item?.pics_url?.[0]" alt="">
+        <div
+          v-for="item of searchList"
+          :key="item.id"
+          class="list-item"
+          @click="showDetail(item)"
+        >
+          <img class="img" :src="item?.pics_url?.[0]" alt="" />
           <div class="detail">
-            <div class="name">{{  item.name }}</div>
+            <div class="name">{{ item.name }}</div>
           </div>
         </div>
       </div>
-      <a-empty style="margin-bottom: 20px;" v-if="!loadingMore && !searchList.length"></a-empty>
+      <a-empty
+        v-if="!loadingMore && !searchList.length"
+        style="margin-bottom: 20px"
+      ></a-empty>
       <a-spin v-if="loadingMore" :size="32" />
     </div>
   </div>
@@ -76,7 +105,8 @@
   const originSearchList = ref<any>([]);
   const page = ref<any>(1);
   const isBottom = ref<any>(false);
-  const { loading: searchLoading, toggle: toggleSearchLoading } = useLoading(false);
+  const { loading: searchLoading, toggle: toggleSearchLoading } =
+    useLoading(false);
   const { loading: loadingMore, toggle: toggleLoadingMore } = useLoading(false);
   const originCity = ref<any>(['北京', '上海', '杭州', '深圳', '广州', '成都']);
   const hotCity = ref<any>(originCity.value);
@@ -94,14 +124,14 @@
     if (newVal === 'zh-CN') {
       searchList.value = originSearchList.value;
     } else {
-      searchList.value = originSearchList.value.map(((item: any) => {
+      searchList.value = originSearchList.value.map((item: any) => {
         return {
           ...item,
-          ...item.en
+          ...item.en,
         };
-      }));
+      });
     }
-  }
+  };
 
   const searchData = async (type?: any) => {
     if (type) {
@@ -110,11 +140,21 @@
       toggleSearchLoading();
     }
     try {
-      const params = { page: page.value, page_size: 15, query: inputVal.value, search: selectedCity.value };
-      const { data: { code, body } } = await SavorApi.searchShop(params);
+      const params = {
+        page: page.value,
+        page_size: 15,
+        query: inputVal.value,
+        search: selectedCity.value,
+      };
+      const {
+        data: { code, body },
+      } = await SavorApi.searchShop(params);
       if (code === 0) {
         if (body && body.apps) {
-          originSearchList.value = page.value === 1 ? body.apps : (searchList.value || []).concat(body.apps);
+          originSearchList.value =
+            page.value === 1
+              ? body.apps
+              : (searchList.value || []).concat(body.apps);
           // searchList.value = page.value === 1 ? body.apps : (searchList.value || []).concat(body.apps);
           changeLangue(globalStore.langue);
           isBottom.value = searchList.value.length === body.total;
@@ -125,12 +165,12 @@
       }
     } finally {
       if (type) {
-      toggleLoadingMore();
-    } else {
-      toggleSearchLoading();
+        toggleLoadingMore();
+      } else {
+        toggleSearchLoading();
+      }
     }
-    }
-  }
+  };
 
   const deatilData = ref<any>({});
   const showDetail = (data: any) => {
@@ -138,24 +178,29 @@
     router.push({
       name: 'homeDetail',
       query: {
-        id: data.id
+        id: data.id,
       },
     });
-  }
+  };
 
   const searchVal = () => {
     page.value = 1;
     searchData();
-  }
-  
+  };
+
   const scrollRef = ref();
   const handleScroll = () => {
     const { scrollTop, scrollHeight, clientHeight } = scrollRef.value;
-    if (page.value !== 0 && clientHeight + scrollTop >= scrollHeight - 5 && !isBottom.value && !loadingMore.value) {
+    if (
+      page.value !== 0 &&
+      clientHeight + scrollTop >= scrollHeight - 5 &&
+      !isBottom.value &&
+      !loadingMore.value
+    ) {
       page.value += 1;
       searchData('more');
     }
-  }
+  };
   const debounceScroll = useDebounceFn(handleScroll, 300);
 
   const addressOption = ref<any>([]);
@@ -167,34 +212,58 @@
     hotCity.value = originCity.value.map((item: any) => {
       return {
         cnLabel: item,
-        label: newVal === 'en-US' ? pinyin(item, { toneType: 'none' }) : item
+        label: newVal === 'en-US' ? pinyin(item, { toneType: 'none' }) : item,
       };
     });
     Object.keys(add).forEach((p: any) => {
       const children: any = [];
       Object.keys(pca[p]).forEach((c: any) => {
         const v: any = { value: c, label: pca[p][c], cnLabel: pca[p][c] };
-        v.label = newVal === 'en-US' ? pinyin(v.label, { toneType: 'none' }) : v.label;
-        children.push(v)
+        v.label =
+          newVal === 'en-US' ? pinyin(v.label, { toneType: 'none' }) : v.label;
+        children.push(v);
       });
       const proitem: any = { value: p, label: pca['86'][p] };
-      if (['北京市', '天津市', '上海市',  '重庆市', '台湾省', '香港特别行政区', '澳门特别行政区'].indexOf(proitem.cnLabel) < 0) {
+      if (
+        [
+          '北京市',
+          '天津市',
+          '上海市',
+          '重庆市',
+          '台湾省',
+          '香港特别行政区',
+          '澳门特别行政区',
+        ].indexOf(proitem.cnLabel) < 0
+      ) {
         if (children.length) {
           proData = proData.concat(children);
         }
       } else {
-        const item = { ...proitem, label: proitem.label.replaceAll('市', '').replaceAll('特别行政区', '').replaceAll('省', ''), cnLabel: proitem.label.replaceAll('市', '').replaceAll('特别行政区', '').replaceAll('省', '') };
-        item.label = newVal === 'en-US' ? pinyin(item.label, { toneType: 'none' }) : item.label;
+        const item = {
+          ...proitem,
+          label: proitem.label
+            .replaceAll('市', '')
+            .replaceAll('特别行政区', '')
+            .replaceAll('省', ''),
+          cnLabel: proitem.label
+            .replaceAll('市', '')
+            .replaceAll('特别行政区', '')
+            .replaceAll('省', ''),
+        };
+        item.label =
+          newVal === 'en-US'
+            ? pinyin(item.label, { toneType: 'none' })
+            : item.label;
         headerList.push(item);
       }
     });
     proData = headerList.concat(proData);
     addressOption.value = proData;
-  }
+  };
 
   const showCityMore = () => {
     visible.value = !visible.value;
-  }
+  };
 
   const selectCity = (val: any) => {
     visible.value = false;
@@ -204,17 +273,20 @@
       selectedCity.value = val;
     }
     searchData();
-  }
+  };
 
   onMounted(() => {
     const { search } = router.currentRoute.value.query;
     inputVal.value = search || '';
     searchData();
     initAddress(globalStore.langue);
-    watch(() => globalStore.langue, (newVal) => {
-      changeLangue(newVal);
-      initAddress(newVal);
-    });
+    watch(
+      () => globalStore.langue,
+      (newVal) => {
+        changeLangue(newVal);
+        initAddress(newVal);
+      }
+    );
   });
 </script>
 
@@ -233,14 +305,14 @@
       flex-direction: column;
       align-items: center;
       overflow-y: auto;
-      background: #20222C;
+      background: #20222c;
 
       .title {
         font-size: 60px;
         font-family: PingFang SC;
         line-height: 128.7px;
         text-align: center;
-        color: #FFFFFF;
+        color: #ffffff;
       }
 
       .city {
@@ -266,7 +338,7 @@
             cursor: pointer;
 
             &:hover {
-              color: #8B95BC;
+              color: #8b95bc;
             }
             &.selected {
               border-bottom: 2px solid #fff;
@@ -305,14 +377,14 @@
         .arco-input-wrapper {
           height: 36px;
           background: transparent;
-          border: 1px solid #FFFFFF;
+          border: 1px solid #ffffff;
           border-radius: 50px;
           color: #fff;
           padding-right: 3px;
         }
 
         .arco-input-focus {
-          border: 1px solid #FFFFFF
+          border: 1px solid #ffffff;
         }
 
         :deep(.arco-icon-hover) {
@@ -331,7 +403,7 @@
 
       &.search {
         height: 100%;
-        background-color: #20222C;
+        background-color: #20222c;
       }
 
       .shop.hidden {
@@ -383,40 +455,40 @@
 </style>
 
 <style lang="less">
-.city-modal {
-  width: 1000px;
-  background: #272A37;
-  border: unset;
-  color: #fff;
+  .city-modal {
+    width: 1000px;
+    background: #272a37;
+    border: unset;
+    color: #fff;
 
-  .arco-popover-content {
-    display: flex;
-    flex-wrap: wrap;
-    height: 400px;
-    overflow-y: auto;
-  }
+    .arco-popover-content {
+      display: flex;
+      flex-wrap: wrap;
+      height: 400px;
+      overflow-y: auto;
+    }
 
-  .city_label {
-    width: 160px;
-    // white-space: nowrap;
-    margin-top: 8px;
-    cursor: pointer;
+    .city_label {
+      width: 160px;
+      // white-space: nowrap;
+      margin-top: 8px;
+      cursor: pointer;
 
-    &:hover {
-      color: #8B95BC;
+      &:hover {
+        color: #8b95bc;
+      }
+    }
+    .city_label.selected span {
+      padding-bottom: 5px;
+      border-bottom: 2px solid #fff;
     }
   }
-  .city_label.selected span {
-    padding-bottom: 5px;
-    border-bottom: 2px solid #fff;
-  }
-}
 
-.city-modal.mobile {
-  width: 100%;
-}
-.city-arrow {
-  background-color: #272A37;
-  border: unset;
-}
+  .city-modal.mobile {
+    width: 100%;
+  }
+  .city-arrow {
+    background-color: #272a37;
+    border: unset;
+  }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <MobileHeader v-if="mobile" :back="back"/>
+  <MobileHeader v-if="mobile" :back="back" />
   <div v-else class="header-pc">
     <Logo />
     <Navigation :lang="lang" />
@@ -11,24 +11,24 @@
   import { computed, ref } from 'vue';
   import Logo from '@/components/logo/index.vue';
   import Navigation from '@/components/navigation/index.vue';
-  import { isMoblie }from '@/utils';
+  import { isMoblie } from '@/utils';
   import Nav from './nav.vue';
   import MobileHeader from './mobile.vue';
 
   const mobile = computed(() => isMoblie());
   const lang = ref(false);
-  const props = defineProps({
+  defineProps({
     back: {
       type: Boolean,
       default() {
         return false;
       },
-    }
+    },
   });
 
   const changelang = () => {
-    lang.value = !lang.value
-  }
+    lang.value = !lang.value;
+  };
 </script>
 
 <style scoped lang="less">
@@ -38,6 +38,6 @@
     padding: 0px 36px;
     z-index: 2;
     justify-content: space-between;
-    background-color: #272A37;
+    background-color: #272a37;
   }
 </style>

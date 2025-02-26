@@ -1,6 +1,6 @@
 <template>
   <div class="logo_cn" @click="goTo">
-    <img :src="userInfo.logoSmall || logoImage" alt="">
+    <img :src="userInfo.logoSmall || logoImage" alt="" />
     <!-- <span>{{ en ? logoInfo.title : '餐饮年鉴' }}</span> -->
   </div>
 </template>
@@ -15,24 +15,22 @@
   const { t } = useI18n();
   const router = useRouter();
   const userInfo = useUserStore();
-  const logoInfo = computed(() =>
-    {
-      return {
-        title: t('logo.title')
-      }
-    }
-  );
-  const props = defineProps({
+  const logoInfo = computed(() => {
+    return {
+      title: t('logo.title'),
+    };
+  });
+  defineProps({
     en: {
       type: Boolean,
       default() {
         return true;
       },
-    }
+    },
   });
   const goTo = () => {
     router.push({ name: 'home' });
-  }
+  };
 </script>
 
 <style scoped lang="less">

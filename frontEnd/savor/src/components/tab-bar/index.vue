@@ -41,9 +41,7 @@
       affixRef.value.updatePosition();
     }
   );
-  listenerRouteChange((route: RouteLocationNormalized) => {
-   
-  }, true);
+  listenerRouteChange((route: RouteLocationNormalized) => {}, true);
 
   onUnmounted(() => {
     removeRouteListener();

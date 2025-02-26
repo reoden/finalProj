@@ -6,7 +6,7 @@
         :loading="loading"
         :data="chefList"
         type="chef"
-        @showDetail="showDetail"
+        @show-detail="showDetail"
       />
     </div>
   </div>
@@ -31,20 +31,22 @@
     if (newVal === 'zh-CN') {
       chefList.value = originChefList.value;
     } else {
-      chefList.value = originChefList.value.map(((item: any) => {
+      chefList.value = originChefList.value.map((item: any) => {
         return {
           ...item,
-          ...item.en
+          ...item.en,
         };
-      }));
+      });
     }
-  }
+  };
 
   // 获取列表数据
   const fetchData = async () => {
     toggleLoading();
     try {
-      const { data: { code, body } } = await SavorApi.chefList();
+      const {
+        data: { code, body },
+      } = await SavorApi.chefList();
       if (code === 0) {
         originChefList.value = body?.apps;
         changeLangue(globalStore.langue);
@@ -58,16 +60,19 @@
     router.push({
       name: 'chefDetail',
       query: {
-        id: item.id
+        id: item.id,
       },
     });
-  }
+  };
 
   onMounted(() => {
     fetchData();
-    watch(() => globalStore.langue, (newVal) => {
-      changeLangue(newVal);
-    });
+    watch(
+      () => globalStore.langue,
+      (newVal) => {
+        changeLangue(newVal);
+      }
+    );
   });
 </script>
 
@@ -89,5 +94,5 @@
       display: flex;
       justify-content: center;
     }
-  }
-</style>./components/list.vue
+  }</style
+>./components/list.vue

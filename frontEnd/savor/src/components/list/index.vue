@@ -65,20 +65,18 @@
     data: {
       type: Object as any,
       default() {
-        return [];
+        return { items: [] };
       },
     },
   });
- 
   const emit = defineEmits(['showDetail']);
 
   const handleDetail = (item: any) => {
     emit('showDetail', item);
-  }
+  };
 </script>
 
 <style lang="less" scoped>
- 
   .list {
     width: 85%;
     margin: 25px 5px 20px;
@@ -95,10 +93,10 @@
       line-height: 21.45px;
       text-align: left;
       border-radius: 16px;
-      background: #272A37;
+      background: #272a37;
       padding: 0px!important;
       margin-bottom: 25px;
-      box-shadow: 0px 3px 15px 0px #1C1E28;
+      box-shadow: 0px 3px 15px 0px #1c1e28;
 
       :deep(.arco-list-item-content) {
         display: flex;
