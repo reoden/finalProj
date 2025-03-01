@@ -3,7 +3,8 @@
     <MenuBar />
     <div class="content">
       <div class="title">
-        <span @click="showList">{{ $t('menu.examine.title') }}</span>{{ type === 'detail' ? ` > ${detailInfo.name}` : '' }}
+        <span @click="showList">{{ $t('menu.examine.title') }}</span
+        >{{ type === 'detail' ? ` > ${detailInfo.name}` : '' }}
       </div>
       <a-divider class="divider" />
       <div v-if="type === 'list'" class="table">
@@ -16,7 +17,7 @@
           :pagination="{
             total: pagination.total,
             current: pagination.page,
-            pageSize: pagination.size
+            pageSize: pagination.size,
           }"
           @page-change="changePage"
         >
@@ -27,7 +28,9 @@
             {{ record?.post_name }} {{ record.address }}
           </template>
           <template #operate="{ record }">
-            <a-link class="link" @click="detail(record)" :hoverable="false">查看详情</a-link>
+            <a-link class="link" :hoverable="false" @click="detail(record)"
+              >查看详情</a-link
+            >
           </template>
         </a-table>
       </div>
@@ -36,13 +39,27 @@
         <template v-else>
           <div class="left">
             <Detail :data="detailInfo" />
-          </div> 
+          </div>
           <div class="right">
             <div class="btns">
-              <a-button v-if="detailInfo.status !== 2" class="agree" :loading="agreeLoading" @click="agree">通过</a-button> 
-              <a-button v-if="detailInfo.status !== 2" class="refuse" :loading="refuseLoading" @click="refuse">拒绝</a-button> 
+              <a-button
+                v-if="detailInfo.status !== 2"
+                class="agree"
+                :loading="agreeLoading"
+                @click="agree"
+                >通过</a-button
+              >
+              <a-button
+                v-if="detailInfo.status !== 2"
+                class="refuse"
+                :loading="refuseLoading"
+                @click="refuse"
+                >拒绝</a-button
+              >
             </div>
-            <a-button class="form-btn down" :loading="downLoading" @click="down">下载商家资料</a-button> 
+            <a-button class="form-btn down" :loading="downLoading" @click="down"
+              >下载商家资料</a-button
+            >
           </div>
         </template>
       </div>
@@ -51,18 +68,19 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, onMounted, computed } from 'vue';
-  import { useI18n } from 'vue-i18n';
-  import useLoading from '@/hooks/loading';
   import SavorApi from '@/api/savor';
-  import MenuBar from '@/components/menu-bar/index.vue';
-  import { STATUS_MAP } from '@/config';
-  import Detail from './detail.vue';
+import MenuBar from '@/components/menu-bar/index.vue';
+import { STATUS_MAP } from '@/config';
+import useLoading from '@/hooks/loading';
+import { computed, onMounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import Detail from './detail.vue';
 
   const { t } = useI18n();
   const shopList = ref<any>([]);
   const { loading, toggle: toggleLoading } = useLoading(false);
-  const { loading: detailLoading, toggle: toggleDetailLoading } = useLoading(false);
+  const { loading: detailLoading, toggle: toggleDetailLoading } =
+    useLoading(false);
   const pagination = ref<any>({
     page: 1,
     size: 20,
@@ -70,28 +88,36 @@
   });
   const type = ref<any>('list');
   const detailInfo = ref<any>({});
-    const dateArr = [{
-    label: t('settled.form.label_mon'),
-    value: t('settled.form.label_mon_us')
-  }, {
-    label: t('settled.form.label_tue'),
-    value: t('settled.form.label_tue_us')
-  }, {
-    label: t('settled.form.label_wed'),
-    value: t('settled.form.label_wed_us')
-  }, {
-    label: t('settled.form.label_thur'),
-    value: t('settled.form.label_thur_us')
-  }, {
-    label: t('settled.form.label_fir'),
-    value: t('settled.form.label_fir_us')
-  }, {
-    label: t('settled.form.label_satu'),
-    value: t('settled.form.label_satu_us')
-  }, {
-    label: t('settled.form.label_sun'),
-    value: t('settled.form.label_sun_us')
-  }];
+  const dateArr = [
+    {
+      label: t('settled.form.label_mon'),
+      value: t('settled.form.label_mon_us'),
+    },
+    {
+      label: t('settled.form.label_tue'),
+      value: t('settled.form.label_tue_us'),
+    },
+    {
+      label: t('settled.form.label_wed'),
+      value: t('settled.form.label_wed_us'),
+    },
+    {
+      label: t('settled.form.label_thur'),
+      value: t('settled.form.label_thur_us'),
+    },
+    {
+      label: t('settled.form.label_fir'),
+      value: t('settled.form.label_fir_us'),
+    },
+    {
+      label: t('settled.form.label_satu'),
+      value: t('settled.form.label_satu_us'),
+    },
+    {
+      label: t('settled.form.label_sun'),
+      value: t('settled.form.label_sun_us'),
+    },
+  ];
 
   const columns = computed(() => {
     return [
@@ -109,12 +135,12 @@
         title: t('examine.colunm.address'),
         slotName: 'address',
         dataIndex: 'address',
-        ellipsis: true
+        ellipsis: true,
       },
       {
         dataIndex: 'describe',
         title: t('examine.colunm.describe'),
-        ellipsis: true
+        ellipsis: true,
       },
       {
         dataIndex: 'status',
@@ -135,25 +161,29 @@
     type.value = 'detail';
     toggleDetailLoading();
     try {
-      const { data: { code, body } } = await SavorApi.shopDetail(record.id);
+      const {
+        data: { code, body },
+      } = await SavorApi.shopDetail(record.id);
       if (code === 0) {
         if (body) {
           detailInfo.value = {
             ...body,
-            work_date_label: body.work_date ? body.work_date.map((item: any) => {
-              const map: any = {};
-              dateArr.forEach((date: any) => {
-                map[date.value] = date.label;
-              })
-              return map[item];
-            }) : [],
+            work_date_label: body.work_date
+              ? body.work_date.map((item: any) => {
+                  const map: any = {};
+                  dateArr.forEach((date: any) => {
+                    map[date.value] = date.label;
+                  });
+                  return map[item];
+                })
+              : [],
           };
         }
       }
     } finally {
       toggleDetailLoading();
     }
-  }
+  };
 
   const showList = () => {
     if (type.value === 'list') {
@@ -161,7 +191,7 @@
     }
     type.value = 'list';
     detailInfo.value = {};
-  }
+  };
 
   // 列表数据
   const fetchData = async () => {
@@ -170,8 +200,10 @@
       const params = {
         page: pagination.value.page,
         size: pagination.value.size,
-      }
-      const { data: { code, body } } = await SavorApi.shopList(params);
+      };
+      const {
+        data: { code, body },
+      } = await SavorApi.shopList(params);
       if (code === 0) {
         pagination.value.total = body?.total;
         if (body && body.apps) {
@@ -188,14 +220,21 @@
     fetchData();
   };
 
-  const { loading: agreeLoading, toggle: toggleAgreeLoading } = useLoading(false);
-  const { loading: refuseLoading, toggle: toggleRefuseLoading } = useLoading(false);
+  const { loading: agreeLoading, toggle: toggleAgreeLoading } =
+    useLoading(false);
+  const { loading: refuseLoading, toggle: toggleRefuseLoading } =
+    useLoading(false);
   const { loading: downLoading, toggle: toggleDownLoading } = useLoading(false);
 
   const agree = async () => {
     toggleAgreeLoading();
     try {
-      const { data: { code } } = await SavorApi.examineShop({ id: detailInfo.value.id, status: '通过' });
+      const {
+        data: { code },
+      } = await SavorApi.examineShop({
+        id: detailInfo.value.id,
+        status: '通过',
+      });
       if (code === 0) {
         showList();
       }
@@ -207,7 +246,12 @@
   const refuse = async () => {
     toggleRefuseLoading();
     try {
-      const { data: { code } } = await SavorApi.examineShop({ id: detailInfo.value.id, status: '拒绝' });
+      const {
+        data: { code },
+      } = await SavorApi.examineShop({
+        id: detailInfo.value.id,
+        status: '拒绝',
+      });
       if (code === 0) {
         showList();
       }
@@ -219,7 +263,9 @@
   const down = async () => {
     toggleDownLoading();
     try {
-      const { data: { code, body } } = await SavorApi.downFile(detailInfo.value.id);
+      const {
+        data: { code, body },
+      } = await SavorApi.downFile(detailInfo.value.id);
       if (code === 0 && body) {
         const a = document.createElement('a');
         a.href = body;
@@ -231,7 +277,7 @@
     } finally {
       toggleDownLoading();
     }
-  }
+  };
 
   onMounted(() => {
     fetchData();
@@ -255,17 +301,17 @@
         font-size: 18px;
         font-weight: 600;
         font-family: PingFang SC;
-        color: #FFFFFF;
+        color: #ffffff;
         padding: 30px 48px;
         span {
-          cursor: pointer
+          cursor: pointer;
         }
       }
 
       .divider {
         width: 100%;
         margin: 0px;
-        border-color: #4A5069;
+        border-color: #4a5069;
       }
 
       .table {
@@ -287,20 +333,20 @@
 
           .arco-table-td {
             background-color: transparent;
-            border-color: #4A5069;
+            border-color: #4a5069;
             color: #fff;
           }
 
           .arco-table-tr {
             &:hover {
               .arco-table-td {
-                background-color: transparent !important;;
+                background-color: transparent !important;
               }
             }
           }
 
           .link {
-            color: #D2B276;
+            color: #d2b276;
             text-decoration: underline;
           }
         }
@@ -320,7 +366,7 @@
         .right {
           width: 30%;
           height: 100%;
-          background-color: #20222C;
+          background-color: #20222c;
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -338,11 +384,11 @@
             color: #fff;
 
             &.agree {
-              background: #D1B276;
+              background: #d1b276;
               margin-bottom: 20px;
             }
             &.refuse {
-              background: #F56C6C;
+              background: #f56c6c;
             }
             &.down {
               margin-bottom: 50px;

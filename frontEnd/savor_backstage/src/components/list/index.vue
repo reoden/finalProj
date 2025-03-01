@@ -7,33 +7,44 @@
         <a-spin v-else />
       </template>
       <a-list-item v-for="item of data" :key="item.id" class="list-item">
-        <img class="img" :src="item?.pictures?.[0]" alt="">
+        <img class="img" :src="item?.pictures?.[0]" alt="" />
         <div class="con">
-          <div class="name">{{  item.name }}</div>
+          <div class="name">{{ item.name }}</div>
           <div class="shop">
             <div class="address">
-              <img :src="addrImage" alt="">
+              <img :src="addrImage" alt="" />
               {{ item.address }}
             </div>
             <div class="phone">
-              <img :src="phoneImage" alt="">
-              {{ item.phone  }}
+              <img :src="phoneImage" alt="" />
+              {{ item.phone }}
             </div>
             <div class="time">
-              <img :src="timeImage" alt="">
-              {{ item.work_begin_at }} ~ {{ item.work_end_at}}
+              <img :src="timeImage" alt="" />
+              {{ item.work_begin_at }} ~ {{ item.work_end_at }}
             </div>
             <div class="diet">
-              <img :src="dietImage" alt="">
-              {{ item.have_vege ? $t('settled.form.have_vege.no') : $t('settled.form.have_vege.yes') }}
+              <img :src="dietImage" alt="" />
+              {{
+                item.have_vege
+                  ? $t('settled.form.have_vege.no')
+                  : $t('settled.form.have_vege.yes')
+              }}
             </div>
           </div>
           <div class="describe">
             {{ item.describe }}
           </div>
           <div class="extra">
-            <div class="date">{{ item?.updated_at?.slice(0, 10).replaceAll('-', '.') }}</div>
-            <a-button type="primary" class="form-btn" @click="handleDetail(item)">{{ $t('shop.detail') }}</a-button>
+            <div class="date">{{
+              item?.updated_at?.slice(0, 10).replaceAll('-', '.')
+            }}</div>
+            <a-button
+              type="primary"
+              class="form-btn"
+              @click="handleDetail(item)"
+              >{{ $t('shop.detail') }}</a-button
+            >
           </div>
         </div>
       </a-list-item>
@@ -67,16 +78,15 @@ import timeImage from '@/assets/images/time.png';
       },
     },
   });
- 
+
   const emit = defineEmits(['showDetail']);
 
   const handleDetail = (item: any) => {
     emit('showDetail', item);
-  }
+  };
 </script>
 
 <style lang="less" scoped>
- 
   .list {
     width: 85%;
     margin: 25px 5px 20px;
@@ -93,15 +103,14 @@ import timeImage from '@/assets/images/time.png';
       line-height: 21.45px;
       text-align: left;
       border-radius: 16px;
-      background: #272A37;
-      padding: 0px!important;
+      background: #272a37;
+      padding: 0px !important;
       margin-bottom: 25px;
-      box-shadow: 0px 3px 15px 0px #1C1E28;
+      box-shadow: 0px 3px 15px 0px #1c1e28;
 
       :deep(.arco-list-item-content) {
         display: flex;
       }
-
 
       .img {
         width: 246px;
@@ -142,7 +151,7 @@ import timeImage from '@/assets/images/time.png';
         .describe {
           margin-top: 10px;
           flex: 1;
-          color: #8B95BC;
+          color: #8b95bc;
         }
 
         .extra {
@@ -150,11 +159,11 @@ import timeImage from '@/assets/images/time.png';
           display: flex;
           justify-content: space-between;
           .date {
-            color: #8E92BC;
+            color: #8e92bc;
           }
 
           .form-btn {
-            background-color: #272A37!important;
+            background-color: #272a37 !important;
             border-radius: 5px;
           }
         }

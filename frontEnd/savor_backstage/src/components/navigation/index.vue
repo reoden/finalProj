@@ -5,7 +5,11 @@
       :selected-keys="selectedKey"
       :show-collapse-button="false"
     >
-      <a-menu-item v-for="menu in meunData" :key="menu.name" @click="goTo(menu.name)">
+      <a-menu-item
+        v-for="menu in meunData"
+        :key="menu.name"
+        @click="goTo(menu.name)"
+      >
         {{ menu.title }}
       </a-menu-item>
     </a-menu>
@@ -14,7 +18,7 @@
 
 <script lang="ts" setup>
   import { useI18n } from 'vue-i18n';
-  import { useRoute, useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router';
 
   const { t } = useI18n();
   const route = useRoute();
@@ -22,24 +26,28 @@
   const parentNodName = route?.meta?.parentName;
   const selectedKey = parentNodName || route.name;
   console.log('route.name', route);
-  const meunData = [{
-    title: t('nav.restaurant.title'),
-    name: 'home',
-  }, {
-    title: t('nav.chef.title'),
-    name: 'chefList',
-  }, {
-    title: t('nav.guest.title'),
-    name: 'guestList',
-  }, {
-    title: t('nav.news.title'),
-    name: 'newsList',
-  }];
+  const meunData = [
+    {
+      title: t('nav.restaurant.title'),
+      name: 'home',
+    },
+    {
+      title: t('nav.chef.title'),
+      name: 'chefList',
+    },
+    {
+      title: t('nav.guest.title'),
+      name: 'guestList',
+    },
+    {
+      title: t('nav.news.title'),
+      name: 'newsList',
+    },
+  ];
 
   const goTo = (name: string) => {
     router.push({ name });
-  }
-
+  };
 </script>
 
 <style scoped lang="less">
@@ -57,7 +65,7 @@
     }
 
     :deep(.arco-menu) {
-      background: #272A37;
+      background: #272a37;
       .arco-menu-inner {
         padding: 4px 16px;
       }
@@ -73,11 +81,11 @@
       }
 
       .arco-menu-selected {
-        background: #272A37;
+        background: #272a37;
         color: #fff;
         border-radius: 5px;
         &:hover {
-          background: #272A37;
+          background: #272a37;
         }
       }
 
@@ -93,7 +101,7 @@
       left: 50%;
       transform: translateX(-50%);
       white-space: nowrap;
-      border: 1px solid #FFFFFF;
+      border: 1px solid #ffffff;
       border-radius: 25px;
       padding: 5px 16px;
       display: flex;

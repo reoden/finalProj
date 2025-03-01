@@ -9,66 +9,63 @@
     <div class="item" :class="{ user: nav.login }" @click="login">
       <span v-if="!nav.login">{{ nav.loginText }}</span>
       <template v-else>
-        <img :src="userImage" alt="">
+        <img :src="userImage" alt="" />
         <span>{{ nav.showPhone }}</span>
       </template>
     </div>
-    <img :src="navImage" alt="" @click="changeLangue">
+    <img :src="navImage" alt="" @click="changeLangue" />
     <Login ref="loginRef" />
   </div>
 </template>
 
 <script lang="ts" setup>
-  import { useRouter } from 'vue-router';
-  import { ref, computed } from 'vue';
-  import { useI18n } from 'vue-i18n';
-  import useLocale from '@/hooks/locale';
-  import { isLogin } from '@/utils/auth';
   import navImage from '@/assets/images/language.png';
-  import userImage from '@/assets/images/user.png';
-  import Login from '@/components/login/index.vue';
-  import { useUserStore } from '@/store';
+import userImage from '@/assets/images/user.png';
+import Login from '@/components/login/index.vue';
+import useLocale from '@/hooks/locale';
+import { useUserStore } from '@/store';
+import { isLogin } from '@/utils/auth';
+import { computed, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 
   const userInfo = useUserStore();
   const { t } = useI18n();
   const router = useRouter();
   const loginRef = ref(null);
   const pattern = /^(\d{3})\d{4}(\d{4})$/;
-  const nav = computed(() => 
-    {
-      return {
-        login: isLogin(),
-        loginText: t('home.nav.login'),
-        settled: t('home.nav.settled'),
-        about: t('home.nav.about'),
-        showPhone: userInfo.phone && userInfo.phone.replace(pattern, '$1****$2')
-      }
-    }
-  );
+  const nav = computed(() => {
+    return {
+      login: isLogin(),
+      loginText: t('home.nav.login'),
+      settled: t('home.nav.settled'),
+      about: t('home.nav.about'),
+      showPhone: userInfo.phone && userInfo.phone.replace(pattern, '$1****$2'),
+    };
+  });
   const { changeLocale, currentLocale } = useLocale();
 
   const changeLangue = () => {
     const defaultLocale = localStorage.getItem('arco-locale') || 'zh-CN';
     if (defaultLocale === 'zh-CN') {
-      changeLocale('en-US')
+      changeLocale('en-US');
     } else {
-      changeLocale('zh-CN')
+      changeLocale('zh-CN');
     }
-  }
+  };
 
   const goTo = () => {
     router.push({ name: 'settled' });
-  }
+  };
 
   const login = () => {
     if (loginRef.value) {
       loginRef.value.showModal();
     }
-  }
+  };
 </script>
 
 <style lang="less" scoped>
-
   .nav {
     display: flex;
     height: 100%;
@@ -77,7 +74,7 @@
     font-weight: 600;
     line-height: 21.45px;
     text-align: center;
-    color: #FFFFFF;
+    color: #ffffff;
     align-items: center;
 
     .item {
@@ -85,12 +82,12 @@
       padding: 3px 8px;
       cursor: pointer;
       &:hover {
-        background: #3A3E4D;
+        background: #3a3e4d;
       }
     }
 
     .user {
-      border: 1px solid #FFFFFF;
+      border: 1px solid #ffffff;
       border-radius: 25px;
       padding: 5px 16px;
       display: flex;
@@ -102,7 +99,7 @@
         margin-right: 5px;
       }
       &:hover {
-        background: #272A37;
+        background: #272a37;
       }
     }
 

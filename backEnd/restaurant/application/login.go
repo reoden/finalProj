@@ -118,14 +118,14 @@ func (l *LoginService) SendCode(ctx context.Context, param domain.Login) (interf
 		return nil, errors.New("今日该手机发送验证码次数已达上限")
 	}
 	code := common.RandDigit(6)
-	// log.Println("==============", code, "=======================")
-	resp, err := pkgs.SendMsg(phone, code)
-	if err != nil {
-		return nil, err
-	}
-	if resp.Message != "OK" {
-		return resp.Message, err
-	}
+	log.Println("==============", code, "=======================")
+	// resp, err := pkgs.SendMsg(phone, code)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// if resp.Message != "OK" {
+	// 	return resp.Message, err
+	// }
 
 	_, err = l.verificationCode.Create(ctx, entity.VerificationCode{
 		Code:  code,

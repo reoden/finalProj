@@ -19,19 +19,17 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, computed, watch, onUnmounted } from 'vue';
-  import type { RouteLocationNormalized } from 'vue-router';
-  import {
-    listenerRouteChange,
-    removeRouteListener,
-  } from '@/utils/route-listener';
   import { useAppStore } from '@/store';
-  import tabItem from './tab-item.vue';
+import {
+  listenerRouteChange,
+  removeRouteListener,
+} from '@/utils/route-listener';
+import { computed, onUnmounted, ref, watch } from 'vue';
+import type { RouteLocationNormalized } from 'vue-router';
 
   const appStore = useAppStore();
 
   const affixRef = ref();
- ;
   const offsetTop = computed(() => {
     return appStore.navbar ? 60 : 0;
   });
@@ -42,8 +40,7 @@
       affixRef.value.updatePosition();
     }
   );
-  listenerRouteChange((route: RouteLocationNormalized) => {
-  }, true);
+  listenerRouteChange((route: RouteLocationNormalized) => {}, true);
 
   onUnmounted(() => {
     removeRouteListener();

@@ -6,21 +6,23 @@
       </div>
       <div class="con">
         <div class="title">{{ $t('backstage.login.title') }}</div>
-        <a-button class="btn" @click="handleLogin">{{ $t('backstage.login.btn') }}</a-button>
+        <a-button class="btn" @click="handleLogin">{{
+          $t('backstage.login.btn')
+        }}</a-button>
       </div>
     </div>
-    <img class="bg-img" :src="BgImage" alt="">
+    <img class="bg-img" :src="BgImage" alt="" />
     <Login ref="loginRef" @success="handleLoginSucc" />
   </div>
 </template>
 
 <script lang="ts" setup>
-  import { ref, onMounted } from 'vue';
-  import { isLogin } from '@/utils/auth';
-  import { useRouter } from 'vue-router';
-  import Login from '@/components/login/index.vue';
-  import Logo from '@/components/logo/index.vue';
   import BgImage from '@/assets/images/bg.png';
+import Login from '@/components/login/index.vue';
+import Logo from '@/components/logo/index.vue';
+import { isLogin } from '@/utils/auth';
+import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
   const router = useRouter();
   const login = isLogin();
@@ -29,25 +31,25 @@
   onMounted(() => {
     if (login) {
       router.push({ name: 'examine' });
-    } 
+    }
   });
 
   const handleLogin = () => {
     if (loginRef.value) {
       loginRef.value.showModal();
     }
-  }
+  };
 
   const handleLoginSucc = () => {
     router.push({ name: 'examine' });
-  }
+  };
 </script>
 
 <style lang="less" scoped>
   .container {
     height: 100%;
     width: 100%;
-    background: #272A37;
+    background: #272a37;
     display: flex;
 
     .left {
@@ -82,10 +84,10 @@
 
         .btn {
           width: 100px;
-          border: 1px solid #D1B276;
+          border: 1px solid #d1b276;
           font-weight: 600;
-          background: #D1B276;
-          color: #20222C;
+          background: #d1b276;
+          color: #20222c;
           margin-left: -190px;
         }
       }
