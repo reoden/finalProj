@@ -2,14 +2,10 @@
   <div class="shop" @click="showDetail">
     <div class="detail">
       <div class="title">{{ data.name }}</div>
-      <div v-if="data.price" class="price"
-        >¥ {{ data.price }}/{{ $t('settled.detail.person') }}</div
-      >
-      <div class="address"
-        ><span>{{ data.post_name }}{{ data.address }}</span></div
-      >
+      <div v-if="data.price" class="price">¥ {{ data.price }}/{{ $t('settled.detail.person') }}</div>
+      <div class="address"><span>{{ data.post_name }}{{ data.address }}</span></div>
     </div>
-    <img :src="data?.pics_url?.[0]" alt="" />
+    <img :src="data?.pics_url?.[0]" alt="">
   </div>
 </template>
 
@@ -26,17 +22,18 @@
 
   const showDetail = () => {
     emit('showDetail', props.data);
-  };
+  }
 </script>
 
 <style lang="less" scoped>
+ 
   .shop {
     width: 300px;
     height: 120px;
     margin: 5px 5px 20px;
     box-sizing: border-box;
     padding: 16px 24px;
-    background: #3a3e4d;
+    background: #3A3E4D;
     border-radius: 5px;
     display: flex;
     justify-content: space-between;

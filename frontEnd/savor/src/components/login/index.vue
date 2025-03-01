@@ -15,37 +15,23 @@
     >
       <div class="type">{{ $t('savor.login.type') }}</div>
       <a-form-item field="phone">
-        <a-input
-          v-model="form.phone"
-          size="large"
-          :placeholder="$t('savor.login.form.phone.placeholder')"
-        >
-          <template #prefix> +86 </template>
+        <a-input size="large" v-model="form.phone" :placeholder="$t('savor.login.form.phone.placeholder')">
+          <template #prefix>
+            +86
+          </template>
         </a-input>
       </a-form-item>
       <a-form-item field="code" class="code">
-        <a-input
-          v-model="form.code"
-          :placeholder="$t('savor.login.form.code.placeholder')"
-        >
+        <a-input v-model="form.code" :placeholder="$t('savor.login.form.code.placeholder')">
           <template #append>
-            <span v-if="coutdown"
-              >{{ coutdown }}{{ $t('savor.login.code') }}</span
-            >
+            <span v-if="coutdown">{{ coutdown }}{{  $t('savor.login.code') }}</span>
             <a-spin v-else :loading="loading">
-              <span @click="getCode">{{
-                $t('savor.login.form.code.get')
-              }}</span>
+              <span @click="getCode">{{  $t('savor.login.form.code.get') }}</span>
             </a-spin>
           </template>
         </a-input>
       </a-form-item>
-      <a-button
-        class="login-btn"
-        :loading="loginLoading"
-        @click="handleLogin"
-        >{{ $t('savor.login.btn') }}</a-button
-      >
+      <a-button class="login-btn" :loading="loginLoading" @click="handleLogin">{{  $t('savor.login.btn') }}</a-button>
     </a-form>
   </a-modal>
 </template>
@@ -62,14 +48,13 @@
   const visible = ref(false);
   const form = reactive({
     phone: '',
-    code: '',
+    code: ''
   });
   const coutdown = ref<any>(null);
   const interval = ref<any>(null);
   const userStore = useUserStore();
   const { loading, toggle: toggleLoading } = useLoading(false);
-  const { loading: loginLoading, toggle: toggleLoginLoading } =
-    useLoading(false);
+  const { loading: loginLoading, toggle: toggleLoginLoading } = useLoading(false);
   const emit = defineEmits(['success']);
 
   const props = defineProps({
@@ -78,7 +63,7 @@
       default() {
         return false;
       },
-    },
+    }
   });
 
   const modalWidth = computed(() => {
@@ -87,9 +72,9 @@
 
   const showModal = () => {
     visible.value = true;
-  };
+  }
 
-  const getCode = async () => {
+  const getCode = async() => {
     const reg = new RegExp(/^1[3-9]\d{9}$/);
     if (!form.phone) {
       Message.error(t('savor.login.form.phone.placeholder'));
@@ -98,9 +83,7 @@
     } else {
       toggleLoading();
       try {
-        const {
-          data: { code },
-        } = await SavorApi.getCode({ phone: form.phone });
+        const { data: { code } } = await SavorApi.getCode({ phone: form.phone });
         if (code === 0) {
           coutdown.value = 60;
           interval.value = setInterval(() => {
@@ -119,7 +102,7 @@
         toggleLoading();
       }
     }
-  };
+  }
 
   const handleLogin = async () => {
     const regPhone = new RegExp(/^1[3-9]\d{9}$/);
@@ -130,7 +113,7 @@
       Message.error(t('settled.form.phone.validator1'));
     } else if (!form.code) {
       Message.error(t('savor.login.form.code.placeholder'));
-    } else if (!regCode.test(form.code)) {
+    } else if(!regCode.test(form.code)) {
       Message.error(t('savor.login.form.code.validator'));
     } else {
       toggleLoginLoading();
@@ -149,8 +132,8 @@
   };
 
   defineExpose({
-    showModal,
-  });
+    showModal
+  })
 </script>
 
 <style scoped lang="less">
@@ -173,13 +156,12 @@
         margin-bottom: 10px;
       }
 
+
       :deep(.arco-form-item-label-required-symbol) {
         display: none;
       }
 
-      :deep(.arco-form-item-label),
-      :deep(.arco-radio-label),
-      :deep(.arco-picker-input) {
+      :deep(.arco-form-item-label), :deep(.arco-radio-label), :deep(.arco-picker-input) {
         color: #fff;
       }
 
@@ -188,12 +170,10 @@
         color: #000;
       }
 
-      :deep(.arco-input-wrapper),
-      :deep(.arco-textarea-wrapper),
-      :deep(.arco-picker) {
-        color: #979797 !important;
-        background: #fff !important;
-        border: 1px solid #979797 !important;
+      :deep(.arco-input-wrapper), :deep(.arco-textarea-wrapper), :deep(.arco-picker) {
+        color: #979797!important;
+        background: #fff!important;
+        border: 1px solid #979797!important;
         border-radius: 5px;
       }
 
@@ -208,7 +188,7 @@
         text-align: center;
         border: 1px solid #979797;
         border-left: unset;
-        color: #d1b276;
+        color: #D1B276;
         background-color: #fff;
         border-radius: 5px;
         border-top-left-radius: 0px;
@@ -227,7 +207,7 @@
           width: 100px;
           height: 100%;
           text-align: center;
-          color: #d1b276;
+          color: #D1B276;
           font-weight: 500;
         }
       }
@@ -236,11 +216,12 @@
         width: 100%;
         height: 56px;
         border-radius: 5px;
-        background: #d1b276;
+        background: #D1B276;
         color: #fff;
         font-size: 16px;
         font-weight: 600;
       }
     }
   }
+ 
 </style>

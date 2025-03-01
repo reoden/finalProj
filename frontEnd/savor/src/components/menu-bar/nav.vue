@@ -9,11 +9,11 @@
     <div class="item" :class="{ user: nav.login }" @click="login">
       <span v-if="!nav.login">{{ nav.loginText }}</span>
       <template v-else>
-        <img :src="userImage" alt="" />
+        <img :src="userImage" alt="">
         <span>{{ nav.showPhone }}</span>
       </template>
     </div>
-    <img :src="navImage" alt="" @click="changeLangue" />
+    <img :src="navImage" alt="" @click="changeLangue">
     <Login ref="loginRef" />
   </div>
 </template>
@@ -34,38 +34,41 @@
   const router = useRouter();
   const loginRef = ref(null);
   const pattern = /^(\d{3})\d{4}(\d{4})$/;
-  const nav = computed(() => {
-    return {
-      login: isLogin(),
-      loginText: t('home.nav.login'),
-      settled: t('home.nav.settled'),
-      about: t('home.nav.about'),
-      showPhone: userInfo.phone && userInfo.phone.replace(pattern, '$1****$2'),
-    };
-  });
+  const nav = computed(() => 
+    {
+      return {
+        login: isLogin(),
+        loginText: t('home.nav.login'),
+        settled: t('home.nav.settled'),
+        about: t('home.nav.about'),
+        showPhone: userInfo.phone && userInfo.phone.replace(pattern, '$1****$2')
+      }
+    }
+  );
   const { changeLocale, currentLocale } = useLocale();
 
   const changeLangue = () => {
     const defaultLocale = localStorage.getItem('arco-locale') || 'zh-CN';
     if (defaultLocale === 'zh-CN') {
-      changeLocale('en-US');
+      changeLocale('en-US')
     } else {
-      changeLocale('zh-CN');
+      changeLocale('zh-CN')
     }
-  };
+  }
 
   const goTo = () => {
     router.push({ name: 'settled' });
-  };
+  }
 
   const login = () => {
     if (loginRef.value) {
       loginRef.value.showModal();
     }
-  };
+  }
 </script>
 
 <style lang="less" scoped>
+
   .nav {
     display: flex;
     height: 100%;
@@ -74,7 +77,7 @@
     font-weight: 600;
     line-height: 21.45px;
     text-align: center;
-    color: #ffffff;
+    color: #FFFFFF;
     align-items: center;
 
     .item {
@@ -82,12 +85,12 @@
       padding: 3px 8px;
       cursor: pointer;
       &:hover {
-        background: #3a3e4d;
+        background: #3A3E4D;
       }
     }
 
     .user {
-      border: 1px solid #ffffff;
+      border: 1px solid #FFFFFF;
       border-radius: 25px;
       padding: 5px 16px;
       display: flex;
@@ -99,7 +102,7 @@
         margin-right: 5px;
       }
       &:hover {
-        background: #272a37;
+        background: #272A37;
       }
     }
 

@@ -2,15 +2,13 @@
   <div class="detail" :class="{ mobile: mobile }">
     <a-spin v-if="loading" :size="32" />
     <div v-else-if="!mobile" class="info">
-      <a-button class="back form-btn" @click="handleBack"
-        ><icon-left style="margin-right: 5px" />{{ $t('shop.back') }}</a-button
-      >
+      <a-button class="back form-btn" @click="handleBack"><icon-left style="margin-right: 5px;" />{{ $t('shop.back') }}</a-button>
       <div class="content">
         <a-carousel
           :style="{
             width: '100%',
             height: '394px',
-            marginBottom: '20px',
+            marginBottom: '20px'
           }"
           auto-play
         >
@@ -18,9 +16,9 @@
             <a-image
               :src="image"
               :style="{
-                'width': '100%',
-                'height': '100%',
-                'object-fit': 'contain',
+                width: '100%',
+                height: '100%',
+                'object-fit': 'contain'
               }"
               :preview-props="{
                 actionsLayout: [],
@@ -43,7 +41,7 @@
         :style="{
           width: '100%',
           height: '370px',
-          marginBottom: '20px',
+          marginBottom: '20px'
         }"
         show-arrow="never"
         :auto-play="true"
@@ -52,9 +50,9 @@
           <a-image
             :src="image"
             :style="{
-              'width': '100%',
-              'height': '100%',
-              'object-fit': 'contain',
+              width: '100%',
+              height: '100%',
+              'object-fit': 'contain'
             }"
             :preview-props="{
               actionsLayout: [],
@@ -62,12 +60,7 @@
           ></a-image>
         </a-carousel-item>
       </a-carousel>
-      <div
-        class="name-wrapper"
-        :class="{
-          'wrapper-desc': !!data.introduction,
-        }"
-      >
+      <div class="name-wrapper" :class="{ 'wrapper-desc' : !!data.introduction }">
         <div class="name">{{ data.name }}</div>
       </div>
       <div v-if="type === 'chef'" class="address">
@@ -76,7 +69,7 @@
       <a-divider />
       <div class="describe">
         {{ data.describe }}
-      </div>
+      </div> 
     </div>
   </div>
 </template>
@@ -86,7 +79,7 @@
   import { isMoblie } from '@/utils';
 
   const mobile = computed(() => isMoblie());
-  defineProps({
+  const props = defineProps({
     loading: {
       type: Boolean,
       default() {
@@ -102,18 +95,20 @@
     data: {
       type: Object as any,
       default() {
-        return { items: [] };
+        return [];
       },
     },
   });
+ 
   const emit = defineEmits(['back']);
 
-  const handleBack = () => {
+  const handleBack = (item: any) => {
     emit('back');
-  };
+  }
 </script>
 
 <style lang="less" scoped>
+ 
   .detail {
     width: 60%;
     margin: 25px 5px 20px;
@@ -136,8 +131,7 @@
       margin-right: 30px;
     }
 
-    .name,
-    .address {
+    .name, .address {
       text-align: center;
       font-family: PingFang SC;
       font-size: 18px;
@@ -146,7 +140,7 @@
     }
 
     :deep(.arco-divider-horizontal) {
-      border-color: #272a37;
+      border-color: #272A37;
     }
 
     .describe {

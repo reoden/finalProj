@@ -2,7 +2,7 @@ export const TABLE_BORDERED = {
   wrapper: true,
   cell: false,
   headerCell: true,
-  bodyCell: false,
+  bodyCell: false
 };
 
 export const BASE_PAGINATION = {
@@ -10,20 +10,10 @@ export const BASE_PAGINATION = {
   pageSize: 20,
   showTotal: true,
   showPageSize: true,
-  pageSizeOptions: [10, 20, 50, 100],
+  pageSizeOptions: [10, 20, 50, 100]
 };
 
-export type DrawerControll =
-  | 'edit'
-  | 'view'
-  | 'add'
-  | 'copy'
-  | 'wx_edit'
-  | 'upload'
-  | 'auth'
-  | 'bind'
-  | 'uploadOne'
-  | 'uploadError';
+export type DrawerControll = 'edit' | 'view' | 'add' | 'copy' | 'wx_edit' | 'upload' | 'auth' | 'bind' | 'uploadOne' | 'uploadError'; 
 export type winControll = {
   visible: boolean;
   operaType: DrawerControll;
@@ -39,5 +29,5 @@ export const STATUS_MAP: any = {
   1: '审核未通过',
   2: '审核通过',
   3: '已删除',
-  4: '草稿',
-};
+  4: '草稿'
+}

@@ -39,8 +39,7 @@ export default {
   'settled.form.name.validator': '餐厅名称必填',
   'settled.form.address': '餐厅地址',
   'settled.form.province.placeholder': '省/市/区(县)',
-  'settled.form.address.placeholder':
-    '请输入详细地址，如上海市南京东路505号海仑宾馆4楼',
+  'settled.form.address.placeholder': '请输入详细地址，如上海市南京东路505号海仑宾馆4楼',
   'settled.form.address.validator': '详细地址必填',
   'settled.form.province.validator': '请选择省/市/区(县)',
   'settled.form.describe': '餐厅介绍',
@@ -117,6 +116,7 @@ export default {
   'settled.form.phone_lable': '电话',
   'settled.form.detail_lable': '详细信息',
   'settled.form.detail_lable_1': '基本信息',
+  
 
   'settled.detail.pic': '图片',
   'settled.detail.status': '当前状态',
@@ -135,7 +135,7 @@ export default {
   'savor.login.form.code.get': '获取验证码',
   'savor.login.form.code.error': '验证码不正确或已失效',
   'savor.login.form.code.validator': '验证码格式不正确',
-
+  
   'nav.restaurant.title': '年鉴餐厅',
   'nav.chef.title': '名厨采访',
   'nav.guest.title': '嘉宾顾问',
@@ -194,5 +194,5 @@ export default {
 
   ...locale403,
   ...locale404,
-  ...locale500,
+  ...locale500
 };

@@ -2,7 +2,11 @@
   <div class="container">
     <Header :back="true" />
     <div class="content search">
-      <Detail :loading="loading" :data="detailData" @cancel="handleCancel" />
+      <Detail
+        :loading="loading"
+        :data="detailData"
+        @cancel="handleCancel"
+      />
     </div>
   </div>
 </template>
@@ -24,36 +28,28 @@
   const { t } = useI18n();
   const globalStore = useAppStore();
 
-  const dateArr = [
-    {
-      label: t('settled.form.label_mon'),
-      value: t('settled.form.label_mon_us'),
-    },
-    {
-      label: t('settled.form.label_tue'),
-      value: t('settled.form.label_tue_us'),
-    },
-    {
-      label: t('settled.form.label_wed'),
-      value: t('settled.form.label_wed_us'),
-    },
-    {
-      label: t('settled.form.label_thur'),
-      value: t('settled.form.label_thur_us'),
-    },
-    {
-      label: t('settled.form.label_fir'),
-      value: t('settled.form.label_fir_us'),
-    },
-    {
-      label: t('settled.form.label_satu'),
-      value: t('settled.form.label_satu_us'),
-    },
-    {
-      label: t('settled.form.label_sun'),
-      value: t('settled.form.label_sun_us'),
-    },
-  ];
+  const dateArr = [{
+    label: t('settled.form.label_mon'),
+    value: t('settled.form.label_mon_us')
+  }, {
+    label: t('settled.form.label_tue'),
+    value: t('settled.form.label_tue_us')
+  }, {
+    label: t('settled.form.label_wed'),
+    value: t('settled.form.label_wed_us')
+  }, {
+    label: t('settled.form.label_thur'),
+    value: t('settled.form.label_thur_us')
+  }, {
+    label: t('settled.form.label_fir'),
+    value: t('settled.form.label_fir_us')
+  }, {
+    label: t('settled.form.label_satu'),
+    value: t('settled.form.label_satu_us')
+  }, {
+    label: t('settled.form.label_sun'),
+    value: t('settled.form.label_sun_us')
+  }];
 
   const changeLangue = (newVal: any) => {
     if (newVal === 'zh-CN') {
@@ -61,31 +57,27 @@
     } else {
       detailData.value = {
         ...originDetail.value,
-        ...originDetail.value.en,
+        ...originDetail.value.en
       };
     }
-  };
+  }
 
   const fetchData = async () => {
     toggleLoading();
     try {
       const { id } = router.currentRoute.value.query;
-      const {
-        data: { code, body },
-      } = await SavorApi.shopDetail(id);
+      const { data: { code, body } } = await SavorApi.shopDetail(id);
       if (code === 0) {
         if (body) {
           originDetail.value = {
             ...body,
-            work_date_label: body.work_date
-              ? body.work_date.map((item: any) => {
-                  const map: any = {};
-                  dateArr.forEach((date: any) => {
-                    map[date.value] = date.label;
-                  });
-                  return map[item];
-                })
-              : [],
+            work_date_label: body.work_date ? body.work_date.map((item: any) => {
+              const map: any = {};
+              dateArr.forEach((date: any) => {
+                map[date.value] = date.label;
+              })
+              return map[item];
+            }) : [],
           };
           changeLangue(globalStore.langue);
         }
@@ -97,18 +89,15 @@
 
   const handleCancel = () => {
     router.push({
-      name: 'homeList',
+      name: 'homeList'
     });
-  };
+  }
 
   onMounted(() => {
     fetchData();
-    watch(
-      () => globalStore.langue,
-      (newVal) => {
-        changeLangue(newVal);
-      }
-    );
+    watch(() => globalStore.langue, (newVal) => {
+      changeLangue(newVal);
+    });
   });
 </script>
 
@@ -132,7 +121,7 @@
         font-family: PingFang SC;
         line-height: 128.7px;
         text-align: center;
-        color: #ffffff;
+        color: #FFFFFF;
       }
 
       .search {
@@ -148,14 +137,14 @@
         .arco-input-wrapper {
           height: 36px;
           background: transparent;
-          border: 1px solid #ffffff;
+          border: 1px solid #FFFFFF;
           border-radius: 50px;
           color: #fff;
           padding-right: 3px;
         }
 
         .arco-input-focus {
-          border: 1px solid #ffffff;
+          border: 1px solid #FFFFFF
         }
 
         :deep(.arco-icon-hover) {
@@ -174,7 +163,7 @@
 
       &.search {
         height: 100%;
-        background-color: #20222c;
+        background-color: #20222C;
       }
 
       .shop.hidden {
@@ -182,6 +171,7 @@
         height: 120px;
         visibility: hidden;
       }
+
     }
   }
 </style>

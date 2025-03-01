@@ -9,10 +9,10 @@ body {
   margin: 0;
   padding: 0;
   font-size: 14px;
-  background: #272A37;
   background-color: var(--color-bg-1);
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
+  background: #272A37;
 }
 
 #app {
@@ -23,69 +23,61 @@ body {
 .echarts-tooltip-diy {
   background: linear-gradient(
     304.17deg,
-    rgb(253 254 255 / 60%) -6.04%,
-    rgb(244 247 252 / 60%) 85.2%
+    rgba(253, 254, 255, 0.6) -6.04%,
+    rgba(244, 247, 252, 0.6) 85.2%
   ) !important;
   border: none !important;
-
+  backdrop-filter: blur(10px) !important;
   /* Note: backdrop-filter has minimal browser support */
 
   border-radius: 6px !important;
-  backdrop-filter: blur(10px) !important;
-
   .content-panel {
     display: flex;
     justify-content: space-between;
+    padding: 0 9px;
+    background: rgba(255, 255, 255, 0.8);
     width: 164px;
     height: 32px;
-    margin-bottom: 4px;
-    padding: 0 9px;
     line-height: 32px;
-    background: rgb(255 255 255 / 80%);
+    box-shadow: 6px 0px 20px rgba(34, 87, 188, 0.1);
     border-radius: 4px;
-    box-shadow: 6px 0 20px rgb(34 87 188 / 10%);
+    margin-bottom: 4px;
   }
-
   .tooltip-title {
-    margin: 0 0 10px;
+    margin: 0 0 10px 0;
   }
-
   p {
     margin: 0;
   }
-
   .tooltip-title,
   .tooltip-value {
-    display: flex;
-    align-items: center;
-    color: #1d2129;
-    font-weight: bold;
     font-size: 13px;
     line-height: 15px;
+    display: flex;
+    align-items: center;
     text-align: right;
+    color: #1d2129;
+    font-weight: bold;
   }
-
   .tooltip-item-icon {
     display: inline-block;
+    margin-right: 8px;
     width: 10px;
     height: 10px;
-    margin-right: 8px;
     border-radius: 50%;
   }
 }
 
 .general-card {
-  border: none;
   border-radius: 4px;
-
+  border: none;
   & > .arco-card-header {
     height: auto;
     padding: 20px;
     border: none;
   }
-
   & > .arco-card-body {
-    padding: 0 20px 20px;
+    padding: 0 20px 20px 20px;
   }
 }
 
@@ -96,12 +88,11 @@ body {
 .arco-table-cell {
   .circle {
     display: inline-block;
+    margin-right: 4px;
     width: 6px;
     height: 6px;
-    margin-right: 4px;
-    background-color: rgb(var(--blue-6));
     border-radius: 50%;
-
+    background-color: rgb(var(--blue-6));
     &.pass {
       background-color: rgb(var(--green-6));
     }
@@ -109,14 +100,13 @@ body {
 }
 
 .form-btn {
+  border: 1px solid #D1B276!important;
+  background: #20222C!important;
   color: #D1B276!important;
   font-weight: 600!important;
-  background: #20222C!important;
-  border: 1px solid #D1B276!important;
-
   &.primary {
-    color: #20222C!important;
     background: #D1B276!important;
+    color: #20222C!important;
   }
 }
 
@@ -129,24 +119,24 @@ body {
 }
 
 .arco-input-wrapper, .arco-textarea-wrapper, .arco-picker {
-  color: #fff!important;
   background: #272A37!important;
+  color: #fff!important;
   border: 1px solid #C3C3C3!important;
 }
 
 .arco-picker input, .arco-picker-focused .arco-picker-input-active input, .arco-picker-focused:hover .arco-picker-input-active input {
-  color: #fff!important;
   background: #272A37!important;
+  color: #fff!important;
 }
 
 
 .arco-spin-mask {
-  background-color: rgb(255 255 255 / 0%)!important;
+  background-color: rgba(255, 255, 255, 0)!important;
 }
 
 li.arco-pagination-item-active {
-  color: #fff!important;
   background: #272A37!important;
+  color: #fff!important;
   border: 1px solid #C3C3C3!important;
 }
 
@@ -177,18 +167,16 @@ li.arco-pagination-item-active {
 }
 
 .arco-btn-primary, .arco-btn-primary[type='button'] {
-  color: #20222C;
   background: #D1B276;
-
+  color: #20222C;
   &:hover {
+    background: rgba(209, 179, 117, 0.8);
     color: #20222C;
-    background: rgb(209 179 117 / 80%);
   }
 }
 
 .arco-btn-primary.arco-btn-disabled, .arco-btn-primary[type='button'].arco-btn-disabled, .arco-btn-primary[type='submit'].arco-btn-disabled {
-  background: rgb(209 179 117 / 80%);
-
+  background: rgba(209, 179, 117, 0.8);
   &:hover {
     color: #fff;
   }

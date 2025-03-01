@@ -1,10 +1,14 @@
-import SavorApi from '@/api/savor';
-import { LoginData, logout as userLogout } from '@/api/user';
-import { clearToken, setToken } from '@/utils/auth';
-import { removeRouteListener } from '@/utils/route-listener';
 import { defineStore } from 'pinia';
-import useAppStore from '../app';
+import {
+  logout as userLogout,
+  getUserInfo,
+  LoginData,
+} from '@/api/user';
+import SavorApi from '@/api/savor';
+import { setToken, clearToken } from '@/utils/auth';
+import { removeRouteListener } from '@/utils/route-listener';
 import { UserState } from './types';
+import useAppStore from '../app';
 
 const useUserStore = defineStore('user', {
   state: (): UserState => ({
@@ -56,46 +60,34 @@ const useUserStore = defineStore('user', {
 
     // Get user's information
     async info() {
-      const {
-        data: { body },
-      }: any = await SavorApi.getUserInfo();
-      console.log('info', body);
+      const { data: { body } } : any = await SavorApi.getUserInfo();
+      console.log('info', body)
       this.setInfo(body);
     },
 
     async getPrize() {
-      const {
-        data: { body },
-      }: any = await SavorApi.prizeConfig();
+      const { data: { body } } : any = await SavorApi.prizeConfig();
       this.setInfo({ showPrize: !!body.prize, menuInfo: body });
     },
 
     async getBanner() {
-      const {
-        data: { body },
-      }: any = await SavorApi.staticBanner();
+      const { data: { body } } : any = await SavorApi.staticBanner();
       this.setInfo({ bannerList: body.apps });
     },
 
     async getLogo() {
-      const {
-        data: { body },
-      }: any = await SavorApi.staticLogo();
+      const { data: { body } } : any = await SavorApi.staticLogo();
       const list = body?.apps || [];
       this.setInfo({
-        logoSmall: list.filter((item: any) => Number(item.id) === 1)?.[0]
-          ?.pic_url,
-        logoBig: list.filter((item: any) => Number(item.id) === 2)?.[0]
-          ?.pic_url,
-      });
+        logoSmall: list.filter((item: any) => Number(item.id) === 1)?.[0]?.pic_url,
+        logoBig: list.filter((item: any) => Number(item.id) === 2)?.[0]?.pic_url
+       });
     },
-
+    
     // Login
     async login(loginForm: LoginData) {
       try {
-        const {
-          data: { body },
-        } = await SavorApi.login(loginForm);
+        const { data: { body } } = await SavorApi.login(loginForm);
         setToken(body.access_token);
       } catch (err) {
         clearToken();

@@ -5,7 +5,7 @@
         :style="{
           width: '100%',
           height: '200px',
-          marginBottom: '10px',
+          marginBottom: '10px'
         }"
         show-arrow="never"
         :auto-play="true"
@@ -14,9 +14,9 @@
           <a-image
             :src="image"
             :style="{
-              'width': '100%',
-              'height': '100%',
-              'object-fit': 'contain',
+              width: '100%',
+              height: '100%',
+              'object-fit': 'contain'
             }"
             :preview-props="{
               actionsLayout: [],
@@ -24,29 +24,21 @@
           ></a-image>
         </a-carousel-item>
       </a-carousel>
-      <div
-        class="name-wrapper"
-        :class="{ 'wrapper-desc': !!detailData.introduction }"
-      >
+      <div class="name-wrapper" :class="{ 'wrapper-desc' : !!detailData.introduction }">
         <div class="name">{{ detailData.name }}</div>
         <div class="desc">{{ detailData.introduction }}</div>
       </div>
       <div class="shopInfo">
-        <a-button class="btn">{{ detailData.leixing }}</a-button>
+        <a-button class="btn ">{{  detailData.leixing }}</a-button>
         <div class="address">
-          <icon-location />
-          <span style="flex: 1"
-            >{{ detailData.post_name || '' }}{{ detailData.address }}</span
-          >
+          <icon-location  />
+          <span style="flex: 1">{{ detailData.post_name || '' }}{{ detailData.address }}</span>
         </div>
         <div class="time">
           <icon-clock-circle />
           <span style="flex: 1">
-            {{
-              detailData.work_date_label &&
-              detailData.work_date_label.join('、')
-            }}
-            {{ detailData.work_begin_at }} ~ {{ detailData.work_end_at }}
+            {{ detailData.work_date_label  && detailData.work_date_label.join('、') }}
+            {{ detailData.work_begin_at }} ~ {{ detailData.work_end_at}}
           </span>
         </div>
         <a-divider />
@@ -54,35 +46,29 @@
           <div class="desc-content">
             <div class="desc" :class="{ all: !showIcon }">
               {{ descValue }}
-              <icon-down v-if="showIcon" class="iconDown" @click="showMore" />
+              <icon-down class="iconDown" v-if="showIcon" @click="showMore" />
             </div>
           </div>
         </div>
         <a-divider />
         <div>
-          <div class="hostman_name"
-            >{{ $t('settled.form.hostman') }}：
-            {{ detailData.hostman_name }}</div
-          >
+          <div class="hostman_name">{{ $t('settled.form.hostman') }}： {{ detailData.hostman_name }}</div>
           <a-carousel
             :style="{
               width: '100%',
               height: '380px',
-              marginBottom: '20px',
+              marginBottom: '20px'
             }"
             show-arrow="never"
             :auto-play="true"
           >
-            <a-carousel-item
-              v-for="image in detailData.hostman_urls"
-              :key="image"
-            >
+            <a-carousel-item v-for="image in detailData.hostman_urls" :key="image">
               <a-image
                 :src="image"
                 :style="{
-                  'width': '100%',
-                  'height': '100%',
-                  'object-fit': 'contain',
+                  width: '100%',
+                  height: '100%',
+                  'object-fit': 'contain'
                 }"
                 :preview-props="{
                   actionsLayout: [],
@@ -91,21 +77,17 @@
             </a-carousel-item>
           </a-carousel>
           <div>
-            <div class="hostman_name think">{{
-              $t('settled.form.hostman_think')
-            }}</div>
+            <div class="hostman_name think">{{ $t('settled.form.hostman_think') }}</div>
             <div class="hostman_think">{{ detailData.hostman_think }}</div>
           </div>
         </div>
         <div v-for="(hot, index) of detailData.hot" :key="index">
-          <div class="hostman_name"
-            >{{ $t('settled.form.hot') }}： {{ hot.hot_name }}</div
-          >
+          <div class="hostman_name">{{ $t('settled.form.hot') }}： {{ hot.hot_name }}</div>
           <a-carousel
             :style="{
               width: '100%',
               height: '330px',
-              marginBottom: '20px',
+              marginBottom: '20px'
             }"
             show-arrow="never"
             :auto-play="true"
@@ -114,9 +96,9 @@
               <a-image
                 :src="image"
                 :style="{
-                  'width': '100%',
-                  'height': '100%',
-                  'object-fit': 'contain',
+                  width: '100%',
+                  height: '100%',
+                  'object-fit': 'contain'
                 }"
                 :preview-props="{
                   actionsLayout: [],
@@ -127,9 +109,9 @@
           <div class="hostman_think">{{ hot.hot_desc }}</div>
         </div>
         <div class="info">
-          <div class="title">{{ $t('settled.form.detail_lable') }}</div>
+          <div class="title">{{ $t('settled.form.detail_lable')}}</div>
           <div class="info-detail">
-            <div class="title">{{ $t('settled.form.detail_lable_1') }}</div>
+            <div class="title">{{ $t('settled.form.detail_lable_1')}}</div>
             <div class="item">
               <div class="label">{{ $t('settled.form.phone_lable') }}</div>
               <div class="desc">{{ detailData.phone }}</div>
@@ -137,60 +119,35 @@
             <div class="item">
               <div class="label">{{ $t('settled.form.yuyue') }}</div>
               <div class="desc">
-                {{
-                  Number(detailData.yuyue) === 1
-                    ? $t('settled.form.yuyue.option1')
-                    : $t('settled.form.yuyue.option2')
-                }}
+                {{ Number(detailData.yuyue) === 1 ? $t('settled.form.yuyue.option1') : $t('settled.form.yuyue.option2') }}
               </div>
             </div>
             <div class="item">
-              <div class="label">{{ $t('settled.form.address') }}</div>
-              <div class="desc"
-                >{{ detailData.post_name || '' }}{{ detailData.address }}</div
-              >
+              <div class="label">{{ $t('settled.form.address')}}</div>
+              <div class="desc">{{ detailData.post_name || '' }}{{ detailData.address }}</div>
             </div>
             <div class="item">
               <div class="label">{{ $t('settled.form.time') }}</div>
-              <div class="desc"
-                >{{ detailData.work_begin_at }} ~
-                {{ detailData.work_end_at }}</div
-              >
+              <div class="desc">{{ detailData.work_begin_at }} ~ {{ detailData.work_end_at}}</div>
             </div>
             <div class="item">
               <div class="label">{{ $t('settled.form.open_lable') }}</div>
-              <div class="desc">
-                {{
-                  detailData.work_date_label &&
-                  detailData.work_date_label.join('、')
-                }}</div
-              >
+              <div class="desc"> {{ detailData.work_date_label  && detailData.work_date_label.join('、') }}</div>
             </div>
             <div class="item">
               <div class="label">{{ $t('settled.form.per') }}</div>
-              <div class="desc">
-                {{ detailData.per }}{{ $t('settled.form.per.desc') }}</div
-              >
+              <div class="desc"> {{ detailData.per }}{{ $t('settled.form.per.desc')}}</div>
             </div>
             <div class="item">
               <div class="label">{{ $t('settled.form.have_vege') }}</div>
-              <div class="desc">{{
-                detailData.have_vege
-                  ? $t('settled.form.have_vege.option1')
-                  : $t('settled.form.have_vege.option2')
-              }}</div>
+              <div class="desc">{{ detailData.have_vege ? $t('settled.form.have_vege.option1') : $t('settled.form.have_vege.option2') }}</div>
             </div>
           </div>
           <div class="logo" :class="{ svg: !userInfo.logoBig }">
-            <img
-              v-if="userInfo.logoBig"
-              :src="userInfo.logoBig"
-              alt=""
-              srcset=""
-            />
+            <img v-if="userInfo.logoBig" :src="userInfo.logoBig" alt="" srcset="">
           </div>
         </div>
-      </div>
+      </div> 
     </div>
   </div>
 </template>
@@ -200,7 +157,7 @@
   import { useUserStore } from '@/store';
 
   const showIcon = ref<any>(false);
-  const userInfo = useUserStore();
+    const userInfo = useUserStore();
 
   const props = defineProps({
     detailData: {
@@ -211,11 +168,11 @@
     },
   });
   const descValue = ref<any>('');
-
+  
   const showMore = () => {
     descValue.value = props.detailData.describe;
     showIcon.value = false;
-  };
+  }
 
   const checkDesc = () => {
     if (props?.detailData?.describe?.length > 110) {
@@ -225,7 +182,7 @@
       descValue.value = props.detailData.describe;
       showIcon.value = false;
     }
-  };
+  }
 
   watch(
     () => props.detailData,
@@ -240,7 +197,7 @@
 </script>
 
 <style lang="less" scoped>
-  .detail {
+ .detail {
     width: 100%;
     padding: 0px 0px 27px;
     position: relative;
@@ -255,7 +212,7 @@
     .content {
       width: 100%;
     }
-
+    
     .name-wrapper {
       position: absolute;
       width: 100%;
@@ -263,12 +220,7 @@
       left: 0px;
       right: 0px;
       z-index: 9;
-      background: linear-gradient(
-        rgba(0, 0, 0, 0),
-        rgba(0, 0, 0, 0.1),
-        rgba(0, 0, 0, 0.5),
-        #000000
-      );
+      background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.5), #000000);
       padding: 0px 12px 12px;
 
       .name {
@@ -288,7 +240,7 @@
         font-size: 12px;
         font-weight: 400;
         line-height: 18px;
-        color: #ffffffcc;
+        color: #FFFFFFCC;
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
@@ -303,8 +255,7 @@
       padding: 0;
     }
 
-    .address,
-    .time {
+    .address, .time {
       margin-bottom: 5px;
       line-height: 20px;
       display: flex;
@@ -313,7 +264,7 @@
 
       :deep(.arco-icon) {
         font-size: 16px;
-        color: #d1b276;
+        color: #D1B276;
         margin-right: 5px;
       }
     }
@@ -321,17 +272,17 @@
     .btn {
       margin: 0 12px 12px;
       border-radius: 16px;
-      background: #d1b276;
-      color: #20222c;
+      background: #D1B276;
+      color: #20222C;
     }
 
     .describe {
       font-weight: normal;
       line-height: 30px;
-      padding: 5px 12px;
+      padding: 5px 12px ;
 
       .title {
-        color: #d1b276;
+        color: #D1B276;
         font-size: 16px;
         margin-bottom: 8px;
         font-weight: 500;
@@ -349,15 +300,16 @@
         position: absolute;
         right: 12px;
         bottom: 5px;
-        color: #d1b276;
+        color: #D1B276;
       }
+
     }
 
     .hostman_name {
       margin: 12px 0 20px 12px;
       font-size: 20px;
-      color: #d1b276;
-
+      color: #D1B276;
+      
       &.think {
         margin-bottom: 13px;
       }
@@ -381,7 +333,7 @@
     .info {
       margin-top: 24px;
       .title {
-        color: #d1b276;
+        color: #D1B276;
         font-size: 18px;
         margin-bottom: 8px;
         font-weight: 500;
@@ -390,7 +342,7 @@
 
       .info-detail {
         margin: 0 12px;
-        background-color: #3a3e4d;
+        background-color: #3A3E4D;
         padding: 20px 12px 6px 12px;
         border-radius: 2px;
 
@@ -435,6 +387,7 @@
       height: 100%;
       object-fit: cover;
     }
+
 
     :deep(.arco-divider-horizontal) {
       width: calc(100% - 24px);
