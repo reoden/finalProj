@@ -7,26 +7,30 @@
         <a-spin v-else /> -->
       </template>
       <a-list-item v-for="item of data" :key="item.id" class="list-item">
-        <img class="img" :src="item?.pics_url?.[0]" alt="">
+        <img class="img" :src="item?.pics_url?.[0]" alt="" />
         <div class="con">
-          <div class="name">{{  item.name }}</div>
+          <div class="name">{{ item.name }}</div>
           <div class="shop">
             <div class="address">
-              <img :src="addrImage" alt="">
+              <img :src="addrImage" alt="" />
               <span>{{ item.post_name }}{{ item.address }}</span>
             </div>
             <div class="phone">
-              <img :src="phoneImage" alt="">
-              {{ item.phone  }}
+              <img :src="phoneImage" alt="" />
+              {{ item.phone }}
             </div>
             <div class="time">
-              <img :src="timeImage" alt="">
-              {{ item.work_begin_at }} ~ {{ item.work_end_at}}
+              <img :src="timeImage" alt="" />
+              {{ item.work_begin_at }} ~ {{ item.work_end_at }}
             </div>
-            <div class="diet">
-              <img :src="dietImage" alt="">
-              {{ item.have_vege ? $t('settled.form.have_vege.yes') : $t('settled.form.have_vege.no') }}
-            </div>
+            <!-- <div class="diet">
+              <img :src="dietImage" alt="" />
+              {{
+                item.have_vege
+                  ? $t('settled.form.have_vege.yes')
+                  : $t('settled.form.have_vege.no')
+              }}
+            </div> -->
           </div>
           <div class="describe">
             <span>
@@ -34,8 +38,15 @@
             </span>
           </div>
           <div class="extra">
-            <div class="date">{{ item?.updated_at?.slice(0, 10).replaceAll('-', '.') }}</div>
-            <a-button type="primary" class="form-btn" @click="handleDetail(item)">{{ $t('shop.detail') }}</a-button>
+            <div class="date">{{
+              item?.updated_at?.slice(0, 10).replaceAll('-', '.')
+            }}</div>
+            <a-button
+              type="primary"
+              class="form-btn"
+              @click="handleDetail(item)"
+              >{{ $t('shop.detail') }}</a-button
+            >
           </div>
         </div>
       </a-list-item>
@@ -45,11 +56,10 @@
 
 <script lang="ts" setup>
   import addrImage from '@/assets/images/addr.png';
-  import phoneImage from '@/assets/images/phone.png';
-  import timeImage from '@/assets/images/time.png';
-  import dietImage from '@/assets/images/diet.png';
+import phoneImage from '@/assets/images/phone.png';
+import timeImage from '@/assets/images/time.png';
 
-  const props = defineProps({
+  defineProps({
     loading: {
       type: Boolean,
       default() {
@@ -65,20 +75,19 @@
     data: {
       type: Object as any,
       default() {
-        return [];
+        return { items: [] };
       },
     },
   });
- 
+
   const emit = defineEmits(['showDetail']);
 
   const handleDetail = (item: any) => {
     emit('showDetail', item);
-  }
+  };
 </script>
 
 <style lang="less" scoped>
- 
   .list {
     width: 85%;
     margin: 25px 5px 20px;

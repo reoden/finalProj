@@ -6,9 +6,10 @@
 </template>
 
 <script lang="ts" setup>
+
   const props = defineProps({
     rate: {
-      type: Object as any,
+      type: Number as any,
       default() {
         return 0;
       },
@@ -18,7 +19,7 @@
       default() {
         return true;
       },
-    }
+    },
   });
 </script>
 

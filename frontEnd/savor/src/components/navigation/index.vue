@@ -13,10 +13,10 @@
 </template>
 
 <script lang="ts" setup>
-  import {  watch, ref } from 'vue';
-  import { useI18n } from 'vue-i18n';
-  import { useRoute, useRouter } from 'vue-router';
   import { useUserStore } from '@/store';
+import { ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRoute, useRouter } from 'vue-router';
 
   const { t, locale } = useI18n();
   const route = useRoute();
@@ -31,31 +31,34 @@
       type: Boolean,
       default() {
         return false;
-      }
-    }
+      },
+    },
   });
-  const meunData = ref<any>([{
-    key: 'app_name',
-    title: 'nav.restaurant.title',
-    lable: isCn ? userInfo.menuInfo?.app_name : 'nav.restaurant.title',
-    name: 'home',
-  }, {
-    key: 'chef_name',
-    title: 'nav.chef.title',
-    lable: isCn ? userInfo.menuInfo?.chef_name : 'nav.chef.title',
-    name: 'chefList',
-  }, {
-    key: 'guest_name',
-    title: 'nav.guest.title',
-    lable: isCn ? userInfo.menuInfo?.guest_name : 'nav.guest.title',
-    name: 'guestList',
-  }, {
-    key: 'news_name',
-    title: 'nav.news.title',
-    lable: isCn ? userInfo.menuInfo?.news_name : 'nav.news.title',
-    name: 'newsList',
-  }]);
-  
+  const meunData = ref<any>([
+    {
+      key: 'app_name',
+      title: 'nav.restaurant.title',
+      lable: isCn ? userInfo.menuInfo?.app_name : 'nav.restaurant.title',
+      name: 'home',
+    },
+    //   {
+    //   key: 'chef_name',
+    //   title: 'nav.chef.title',
+    //   lable: isCn ? userInfo.menuInfo?.chef_name : 'nav.chef.title',
+    //   name: 'chefList',
+    // }, {
+    //   key: 'guest_name',
+    //   title: 'nav.guest.title',
+    //   lable: isCn ? userInfo.menuInfo?.guest_name : 'nav.guest.title',
+    //   name: 'guestList',
+    // }, {
+    //   key: 'news_name',
+    //   title: 'nav.news.title',
+    //   lable: isCn ? userInfo.menuInfo?.news_name : 'nav.news.title',
+    //   name: 'newsList',
+    //   },
+  ]);
+
   if (userInfo.showPrize) {
     meunData.value.splice(1, 0, {
       key: 'prize_name',

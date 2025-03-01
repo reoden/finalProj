@@ -67,7 +67,7 @@ export default {
   'settled.form.hostman_pics': '主理人图片',
   'settled.form.hostman_think': '主理人理念',
   'settled.form.yuyue': '是否可以预约',
-  'settled.form.per': '人均',
+  'settled.form.per': '门票',
   'settled.form.per.desc': '元/人',
   'settled.form.hot_name': '招牌菜名',
   'settled.form.hot_pics': '招牌菜图片',

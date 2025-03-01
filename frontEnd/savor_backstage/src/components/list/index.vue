@@ -43,9 +43,9 @@
 
 <script lang="ts" setup>
   import addrImage from '@/assets/images/addr.png';
-  import phoneImage from '@/assets/images/phone.png';
-  import timeImage from '@/assets/images/time.png';
-  import dietImage from '@/assets/images/diet.png';
+import dietImage from '@/assets/images/diet.png';
+import phoneImage from '@/assets/images/phone.png';
+import timeImage from '@/assets/images/time.png';
 
   const props = defineProps({
     loading: {
@@ -61,7 +61,7 @@
       },
     },
     data: {
-      type: Object as any,
+      type: Array as any,
       default() {
         return [];
       },

@@ -75,8 +75,8 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed } from 'vue';
   import { isMoblie } from '@/utils';
+import { computed } from 'vue';
 
   const mobile = computed(() => isMoblie());
   const props = defineProps({
@@ -93,7 +93,7 @@
       },
     },
     data: {
-      type: Object as any,
+      type: Array as any,
       default() {
         return [];
       },

@@ -136,7 +136,7 @@ export default {
   'savor.login.form.code.error': 'Code wrong Or expired',
   'savor.login.form.code.validator': 'Code wrong',
   
-  'nav.restaurant.title': 'Restaurants',
+  'nav.restaurant.title': 'Scenes',
   'nav.chef.title': 'Interview',
   'nav.guest.title': 'Advisor',
   'nav.news.title': 'News',
