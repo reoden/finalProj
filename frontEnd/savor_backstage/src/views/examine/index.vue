@@ -84,7 +84,7 @@ import Detail from './detail.vue';
   const pagination = ref<any>({
     page: 1,
     size: 20,
-    total: 0
+    total: 0,
   });
   const type = ref<any>('list');
   const detailInfo = ref<any>({});
@@ -138,7 +138,7 @@ import Detail from './detail.vue';
         ellipsis: true,
       },
       {
-        dataIndex: 'describe',
+        dataIndex: 'introduction',
         title: t('examine.colunm.describe'),
         ellipsis: true,
       },

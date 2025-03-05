@@ -1,10 +1,12 @@
 package application
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -13,6 +15,7 @@ import (
 	"restaurant/domain"
 	"restaurant/entity"
 	"restaurant/pkgs"
+	"strings"
 	"time"
 
 	officedocCommon "github.com/unidoc/unioffice/common"
@@ -539,6 +542,180 @@ func (a *AppService) appResp2Application(app *entity.AppResp) (*entity.Applicati
 
 	return param, nil
 }
+func sceneExtract(textContent, correctStr string) bool {
+	data := map[string]string{
+		"text": textContent,
+	}
+	req, err := json.Marshal(data)
+	if err != nil {
+		log.Println(err)
+		return false
+	}
+
+	url := "http://127.0.0.1:8000/extract"
+	resp, err := http.Post(url, "application/json", bytes.NewBuffer(req))
+	if err != nil {
+		log.Printf("发送POST请求出错,错误信息: %v\n", err)
+		return false
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Println(err)
+		return false
+	}
+
+	type respData struct {
+		Scenes []string `json:"scenes"`
+		Text   string   `json:"text"`
+	}
+
+	var ans respData
+	if err = json.Unmarshal(body, &ans); err != nil {
+		log.Println(err)
+		return false
+	}
+
+	log.Println(ans.Scenes)
+	ret := ans.Scenes
+
+	for _, nowStr := range ret {
+		if strings.HasPrefix(correctStr, nowStr) {
+			return true
+		}
+	}
+
+	return false
+}
+
+func scanMGword(textContent string) bool {
+	data := map[string]string{
+		"text": textContent,
+	}
+	req, err := json.Marshal(data)
+	if err != nil {
+		log.Println(err)
+		return true
+	}
+
+	url := "http://127.0.0.1:8000/scanMGword"
+	resp, err := http.Post(url, "application/json", bytes.NewBuffer(req))
+	if err != nil {
+		log.Printf("发送POST请求失败,错误信息: %v\n", err)
+		return true
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Println(err)
+		return true
+	}
+
+	type respData struct {
+		Result int `json:"result"`
+	}
+
+	var ans respData
+	if err = json.Unmarshal(body, &ans); err != nil {
+		log.Println(err)
+		return true
+	}
+
+	if ans.Result == 0 {
+		return true
+	}
+
+	return false
+}
+
+func (a *AppService) reqPicValid(ctx context.Context, app *entity.Application) (bool, error) {
+	appPairStrs, err := a.picStr2Urls(app.Pictures)
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+
+	urls := appPairStrs.Urls
+
+	type reqData struct {
+		Url string `json:"url"`
+	}
+	for _, url := range urls {
+		data := map[string]string{
+			"url": url,
+		}
+		req, err := json.Marshal(data)
+		if err != nil {
+			log.Println(err)
+			return false, err
+		}
+
+		reqUrl := ""
+		resp, err := http.Post(reqUrl, "application/json", bytes.NewBuffer(req))
+		if err != nil {
+			log.Printf("发送POST请求失败,错误信息: %v\n", err)
+			return false, err
+		}
+		defer resp.Body.Close()
+
+		body, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			log.Println(err)
+			return false, err
+		}
+
+		type respData struct {
+			FusionScore float64 `json:"fusion_score"`
+		}
+
+		var ans respData
+		if err = json.Unmarshal(body, &ans); err != nil {
+			log.Println(err)
+			return false, err
+		}
+
+		if ans.FusionScore > 0 {
+			return false, nil
+		}
+	}
+
+	return true, nil
+}
+
+func (a *AppService) checkValid(ctx context.Context, param entity.Application) entity.Status {
+	status := entity.StatusRefused
+	statusBool := sceneExtract(param.Introduction, param.Name)
+	if statusBool {
+		status = entity.StatusAccepted
+	} else {
+		status = entity.StatusRefused
+		return status
+	}
+
+	statusBool = scanMGword(param.Introduction)
+	if !statusBool {
+		status = entity.StatusRefused
+		return status
+	} else {
+		status = entity.StatusAccepted
+	}
+
+	statusBool, err := a.reqPicValid(ctx, &param)
+	if err != nil {
+		log.Println(err)
+		return entity.StatusRefused
+	}
+
+	if statusBool {
+		status = entity.StatusAccepted
+	} else {
+		status = entity.StatusRefused
+	}
+	return status
+}
 
 // Create 创建
 func (a *AppService) Create(ctx context.Context, param entity.AppResp, userId int64, status entity.Status) (*entity.AppResp, error) {
@@ -621,6 +798,7 @@ func (a *AppService) Create(ctx context.Context, param entity.AppResp, userId in
 	if app != nil {
 		params.Id = app.Id
 		params.UserId = app.UserId
+		status = a.checkValid(ctx, params)
 		params.Status = status
 		params.UpdatedAt = currentTime
 		params.CreatedAt = app.CreatedAt
@@ -639,6 +817,7 @@ func (a *AppService) Create(ctx context.Context, param entity.AppResp, userId in
 	params.UserId = userId
 	params.CreatedAt = currentTime
 	params.UpdatedAt = currentTime
+	status = a.checkValid(ctx, params)
 	params.Status = status
 
 	tempApp, err := a.db.Create(ctx, &params)
@@ -1038,19 +1217,19 @@ func (as *AppService) DownloadDoc(ctx context.Context, userId, id int64) (string
 
 	para := doc.AddParagraph()
 	run := para.AddRun()
-	run.AddText(fmt.Sprintf("餐厅名称:\t%s", params.Name))
+	run.AddText(fmt.Sprintf("景点名称:\t%s", params.Name))
 	run.AddBreak()
 
-	run.AddText(fmt.Sprintf("餐厅类型:\t%s", params.Leixing))
-	run.AddBreak()
+	// run.AddText(fmt.Sprintf("餐厅类型:\t%s", params.Leixing))
+	// run.AddBreak()
 
-	run.AddText(fmt.Sprintf("人均:\t%s", params.Per))
+	run.AddText(fmt.Sprintf("门票价:\t%s", params.Per))
 	run.AddBreak()
 
 	run.AddText(fmt.Sprintf("详细地址:\t%s", params.Address))
 	run.AddBreak()
 
-	run.AddText(fmt.Sprintf("餐厅联系方式:\t%s", params.Phone))
+	run.AddText(fmt.Sprintf("联系方式:\t%s", params.Phone))
 	run.AddBreak()
 
 	run.AddText(fmt.Sprintf("营业日期:\t%s", params.WorkDate))
@@ -1059,20 +1238,20 @@ func (as *AppService) DownloadDoc(ctx context.Context, userId, id int64) (string
 	run.AddText(fmt.Sprintf("营业时间:\t%s~%s", params.WorkBeginAt, params.WorkEndAt))
 	run.AddBreak()
 
-	run.AddText(fmt.Sprintln("是否可以预约:\t"))
-	if params.Yuyue == 1 {
-		run.AddText("可以")
-	} else {
-		run.AddText("否")
-	}
-	run.AddBreak()
+	// run.AddText(fmt.Sprintln("是否可以预约:\t"))
+	// if params.Yuyue == 1 {
+	// 	run.AddText("可以")
+	// } else {
+	// 	run.AddText("否")
+	// }
+	// run.AddBreak()
 
-	run.AddText(fmt.Sprintln("是否有素食:\t"))
-	if params.HaveVege == 1 {
-		run.AddText("是")
-	} else {
-		run.AddText("否")
-	}
+	// run.AddText(fmt.Sprintln("是否有素食:\t"))
+	// if params.HaveVege == 1 {
+	// 	run.AddText("是")
+	// } else {
+	// 	run.AddText("否")
+	// }
 
 	run.AddText("置顶图片:")
 	run.AddBreak()
@@ -1124,114 +1303,114 @@ func (as *AppService) DownloadDoc(ctx context.Context, userId, id int64) (string
 	run.AddBreak()
 
 	run.AddText(fmt.Sprintf("简介:\t%s", params.Introduction))
-	run.AddText(fmt.Sprintf("详细介绍:\t%s", params.Describe))
+	// run.AddText(fmt.Sprintf("详细介绍:\t%s", params.Describe))
 
-	tempHostDir := "../tempHostImages"
-	os.MkdirAll(tempHostDir, os.ModePerm)
-	defer os.RemoveAll(tempHostDir)
+	// tempHostDir := "../tempHostImages"
+	// os.MkdirAll(tempHostDir, os.ModePerm)
+	// defer os.RemoveAll(tempHostDir)
 
-	hostImgs := []officedocCommon.ImageRef{}
-	for i, url := range params.HostmanUrls {
-		response, err := http.Get(url)
-		if err != nil {
-			log.Fatalf("Error downloading image: %v", err)
-		}
-		defer response.Body.Close()
+	// hostImgs := []officedocCommon.ImageRef{}
+	// for i, url := range params.HostmanUrls {
+	// 	response, err := http.Get(url)
+	// 	if err != nil {
+	// 		log.Fatalf("Error downloading image: %v", err)
+	// 	}
+	// 	defer response.Body.Close()
 
-		imgPath := filepath.Join(tempHostDir, filepath.Base(params.HostmanPics[i]))
-		file, err := os.Create(imgPath)
-		if err != nil {
-			log.Fatalf("Error creating image file: %v", err)
-		}
-		defer file.Close()
+	// 	imgPath := filepath.Join(tempHostDir, filepath.Base(params.HostmanPics[i]))
+	// 	file, err := os.Create(imgPath)
+	// 	if err != nil {
+	// 		log.Fatalf("Error creating image file: %v", err)
+	// 	}
+	// 	defer file.Close()
 
-		_, err = io.Copy(file, response.Body)
-		if err != nil {
-			log.Fatalf("Error saving image file: %v", err)
-		}
+	// 	_, err = io.Copy(file, response.Body)
+	// 	if err != nil {
+	// 		log.Fatalf("Error saving image file: %v", err)
+	// 	}
 
-		img, err := officedocCommon.ImageFromFile(imgPath)
-		if err != nil {
-			return "", fmt.Errorf("unable to create image: %s", err)
-		}
+	// 	img, err := officedocCommon.ImageFromFile(imgPath)
+	// 	if err != nil {
+	// 		return "", fmt.Errorf("unable to create image: %s", err)
+	// 	}
 
-		imgref, err := doc.AddImage(img)
-		if err != nil {
-			return "", err
-		}
-		hostImgs = append(hostImgs, imgref)
-	}
+	// 	imgref, err := doc.AddImage(img)
+	// 	if err != nil {
+	// 		return "", err
+	// 	}
+	// 	hostImgs = append(hostImgs, imgref)
+	// }
 
-	run.AddText(fmt.Sprintf("主理人名字:\t%s", params.HostmanName))
-	run.AddBreak()
+	// run.AddText(fmt.Sprintf("主理人名字:\t%s", params.HostmanName))
+	// run.AddBreak()
 
-	for _, img := range hostImgs {
-		inl, err := run.AddDrawingInline(img)
-		if err != nil {
-			return "", fmt.Errorf("unable to add inline image: %s", err)
-		}
-		inl.SetSize(2*measurement.Inch, 2*measurement.Inch)
-		run.AddTab()
-	}
-	run.AddBreak()
+	// for _, img := range hostImgs {
+	// 	inl, err := run.AddDrawingInline(img)
+	// 	if err != nil {
+	// 		return "", fmt.Errorf("unable to add inline image: %s", err)
+	// 	}
+	// 	inl.SetSize(2*measurement.Inch, 2*measurement.Inch)
+	// 	run.AddTab()
+	// }
+	// run.AddBreak()
 
-	run.AddText(fmt.Sprintf("主理人理念:\t%s", params.HostmanThink))
-	run.AddBreak()
+	// run.AddText(fmt.Sprintf("主理人理念:\t%s", params.HostmanThink))
+	// run.AddBreak()
 
-	hotLen := len(params.Hot)
+	// hotLen := len(params.Hot)
 
-	for j := 0; j < hotLen; j++ {
-		run.AddText(fmt.Sprintf("招牌菜 %d: \t%s", j, params.Hot[j].HotName))
-		run.AddBreak()
+	// for j := 0; j < hotLen; j++ {
+	// 	run.AddText(fmt.Sprintf("招牌菜 %d: \t%s", j, params.Hot[j].HotName))
+	// 	run.AddBreak()
 
-		tempHotDir := fmt.Sprintf("../tempHotImages_%d", j+1)
-		os.MkdirAll(tempHotDir, os.ModePerm)
-		defer os.RemoveAll(tempHotDir)
-		hotImgs := []officedocCommon.ImageRef{}
-		for i, url := range params.Hot[j].HotPicUrls {
-			response, err := http.Get(url)
-			if err != nil {
-				log.Fatalf("Error downloading image: %v", err)
-			}
-			defer response.Body.Close()
+	// 	tempHotDir := fmt.Sprintf("../tempHotImages_%d", j+1)
+	// 	os.MkdirAll(tempHotDir, os.ModePerm)
+	// 	defer os.RemoveAll(tempHotDir)
+	// 	hotImgs := []officedocCommon.ImageRef{}
+	// 	for i, url := range params.Hot[j].HotPicUrls {
+	// 		response, err := http.Get(url)
+	// 		if err != nil {
+	// 			log.Fatalf("Error downloading image: %v", err)
+	// 		}
+	// 		defer response.Body.Close()
 
-			imgPath := filepath.Join(tempHotDir, filepath.Base(params.Hot[j].HotPics[i]))
-			file, err := os.Create(imgPath)
-			if err != nil {
-				log.Fatalf("Error creating image file: %v", err)
-			}
-			defer file.Close()
+	// 		imgPath := filepath.Join(tempHotDir, filepath.Base(params.Hot[j].HotPics[i]))
+	// 		file, err := os.Create(imgPath)
+	// 		if err != nil {
+	// 			log.Fatalf("Error creating image file: %v", err)
+	// 		}
+	// 		defer file.Close()
 
-			_, err = io.Copy(file, response.Body)
-			if err != nil {
-				log.Fatalf("Error saving image file: %v", err)
-			}
+	// 		_, err = io.Copy(file, response.Body)
+	// 		if err != nil {
+	// 			log.Fatalf("Error saving image file: %v", err)
+	// 		}
 
-			img, err := officedocCommon.ImageFromFile(imgPath)
-			if err != nil {
-				return "", fmt.Errorf("unable to create image: %s", err)
-			}
+	// 		img, err := officedocCommon.ImageFromFile(imgPath)
+	// 		if err != nil {
+	// 			return "", fmt.Errorf("unable to create image: %s", err)
+	// 		}
 
-			imgref, err := doc.AddImage(img)
-			if err != nil {
-				return "", err
-			}
-			hotImgs = append(hotImgs, imgref)
-		}
+	// 		imgref, err := doc.AddImage(img)
+	// 		if err != nil {
+	// 			return "", err
+	// 		}
+	// 		hotImgs = append(hotImgs, imgref)
+	// 	}
 
-		for _, img := range hotImgs {
-			inl, err := run.AddDrawingInline(img)
-			if err != nil {
-				return "", fmt.Errorf("unable to add inline image: %s", err)
-			}
-			inl.SetSize(2*measurement.Inch, 2*measurement.Inch)
-			run.AddTab()
-		}
-		run.AddBreak()
+	// 	for _, img := range hotImgs {
+	// 		inl, err := run.AddDrawingInline(img)
+	// 		if err != nil {
+	// 			return "", fmt.Errorf("unable to add inline image: %s", err)
+	// 		}
+	// 		inl.SetSize(2*measurement.Inch, 2*measurement.Inch)
+	// 		run.AddTab()
+	// 	}
+	// 	run.AddBreak()
 
-		run.AddText(fmt.Sprintf("招牌菜描述:\t%s", params.Hot[j].HotDesc))
-		run.AddBreak()
-	}
+	// 	run.AddText(fmt.Sprintf("招牌菜描述:\t%s", params.Hot[j].HotDesc))
+	// 	run.AddBreak()
+	// }
 
 	saveFilePath := fmt.Sprintf("%s.docx", params.Name)
 	err = doc.SaveToFile(saveFilePath)
