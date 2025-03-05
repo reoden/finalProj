@@ -18,6 +18,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/openai/openai-go"
+	"github.com/openai/openai-go/option"
 	officedocCommon "github.com/unidoc/unioffice/common"
 	"github.com/unidoc/unioffice/common/license"
 	"github.com/unidoc/unioffice/document"
@@ -636,9 +638,9 @@ func (a *AppService) reqPicValid(ctx context.Context, app *entity.Application) (
 		return false, err
 	}
 
-	return true, nil
-
 	urls := appPairStrs.Urls
+	log.Println(urls)
+	return true, nil
 
 	type reqData struct {
 		Url string `json:"url"`
@@ -685,9 +687,78 @@ func (a *AppService) reqPicValid(ctx context.Context, app *entity.Application) (
 	return true, nil
 }
 
+// 注意: openai 官方的 golang sdk 目前尚处于 alpha 阶段。未来可能会出现一些小的破坏性改动。
+
+func (a *AppService) reqOpenai(ctx context.Context, param *entity.Application, name string) (bool, error) {
+	// 构造 client
+	client := openai.NewClient(
+		option.WithAPIKey(os.Getenv("HUNYUAN_API_KEY")),                 // 混元 APIKey
+		option.WithBaseURL("https://api.hunyuan.cloud.tencent.com/v1/"), // 混元 endpoint
+	)
+
+	appPairStrs, err := a.picStr2Urls(param.Pictures)
+	if err != nil {
+		return false, err
+	}
+
+	urls := appPairStrs.Urls
+	for _, url := range urls {
+		// 自定义参数传参示例
+		completion, err := client.Chat.Completions.New(context.Background(), openai.ChatCompletionNewParams{
+			Messages: openai.F([]openai.ChatCompletionMessageParamUnion{
+				openai.ChatCompletionUserMessageParam{
+					Role: openai.F(openai.ChatCompletionUserMessageParamRoleUser),
+					Content: openai.F([]openai.ChatCompletionContentPartUnionParam{
+						openai.TextPart("这是哪个景区，仅告诉我景区名字，不要过多分析,不要介绍只需要景区名称"),
+						openai.ImagePart(url),
+					}),
+				},
+			}),
+			Model: openai.F("hunyuan-vision"),
+		},
+		)
+
+		if err != nil {
+			log.Println(err)
+		}
+
+		log.Println(completion.Choices[0].Message.Content)
+
+		now := completion.Choices[0].Message.Content
+		if now == name {
+			return true, nil
+		} else {
+		}
+	}
+	return false, nil
+}
 func (a *AppService) checkValid(ctx context.Context, param entity.Application) entity.Status {
 	status := entity.StatusRefused
-	statusBool := sceneExtract(param.Introduction, param.Name)
+	statusBool, err := a.reqOpenai(ctx, &param, param.Name)
+	if err != nil {
+		log.Println(err)
+		return entity.StatusRefused
+	}
+	if statusBool {
+		status = entity.StatusAccepted
+	} else {
+		status = entity.StatusRefused
+		return status
+	}
+
+	statusBool, err = a.reqPicValid(ctx, &param)
+	if err != nil {
+		log.Println(err)
+		return entity.StatusRefused
+	}
+	if statusBool {
+		status = entity.StatusAccepted
+	} else {
+		status = entity.StatusRefused
+		return status
+	}
+
+	statusBool = sceneExtract(param.Introduction, param.Name)
 	if statusBool {
 		status = entity.StatusAccepted
 	} else {
@@ -703,17 +774,6 @@ func (a *AppService) checkValid(ctx context.Context, param entity.Application) e
 		status = entity.StatusAccepted
 	}
 
-	statusBool, err := a.reqPicValid(ctx, &param)
-	if err != nil {
-		log.Println(err)
-		return entity.StatusRefused
-	}
-
-	if statusBool {
-		status = entity.StatusAccepted
-	} else {
-		status = entity.StatusRefused
-	}
 	return status
 }
 
