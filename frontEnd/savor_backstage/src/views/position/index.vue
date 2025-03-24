@@ -279,7 +279,7 @@ import { useI18n } from 'vue-i18n';
   const bannerList = ref<any>([]);
   const logoList = ref<any>([]);
   const { loading: editLoading, toggle: toggleEditLoading } = useLoading(false);
-  const appName = ref('年鉴餐厅');
+  const appName = ref('景点收集');
   const isEdit = ref(false);
 
   const columns = computed(() => {

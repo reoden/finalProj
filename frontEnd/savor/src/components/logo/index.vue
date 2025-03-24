@@ -1,7 +1,7 @@
 <template>
   <div class="logo_cn" @click="goTo">
     <img :src="userInfo.logoSmall || logoImage" alt="">
-    <!-- <span>{{ en ? logoInfo.title : '餐饮年鉴' }}</span> -->
+    <!-- <span>{{ en ? logoInfo.title : '景点发布' }}</span> -->
   </div>
 </template>
 

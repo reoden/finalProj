@@ -73,33 +73,33 @@ func (as *AppService) TranslateWord(ctx context.Context, param entity.AppResp) (
 		return nil, err
 	}
 
-	introductionResult, err := as.chat.Chat(ctx, as.chat.GetParams(param.Introduction), nil)
-	if err != nil {
-		log.Printf("Translate Introduction Error: %v\n", err)
-	}
+	// introductionResult, err := as.chat.Chat(ctx, as.chat.GetParams(param.Introduction), nil)
+	// if err != nil {
+	// 	log.Printf("Translate Introduction Error: %v\n", err)
+	// }
 
-	hostmanNameResult, err := as.chat.Chat(ctx, as.chat.GetParams(param.HostmanName), nil)
-	if err != nil {
-		log.Printf("Translate HostmanName Error: %v\n", err)
-	}
+	// hostmanNameResult, err := as.chat.Chat(ctx, as.chat.GetParams(param.HostmanName), nil)
+	// if err != nil {
+	// 	log.Printf("Translate HostmanName Error: %v\n", err)
+	// }
 
-	hostmanThinkResult, err := as.chat.Chat(ctx, as.chat.GetParams(param.HostmanThink), nil)
-	if err != nil {
-		log.Printf("Translate HostmanThink Error: %v\n", err)
-	}
+	// hostmanThinkResult, err := as.chat.Chat(ctx, as.chat.GetParams(param.HostmanThink), nil)
+	// if err != nil {
+	// 	log.Printf("Translate HostmanThink Error: %v\n", err)
+	// }
 
-	leixingResult, err := as.chat.Chat(ctx, as.chat.GetParams(param.Leixing), nil)
+	// leixingResult, err := as.chat.Chat(ctx, as.chat.GetParams(param.Leixing), nil)
 
 	res := entity.AppEn{
-		Name:         nameResult.Content,
-		Address:      addressResult.Content,
-		Describe:     describeResult.Content,
-		PostCode:     param.PostCode,
-		PostName:     postNameResult.Content,
-		Introduction: introductionResult.Content,
-		HostmanName:  hostmanNameResult.Content,
-		HostmanThink: hostmanThinkResult.Content,
-		Leixing:      leixingResult.Content,
+		Name:     nameResult.Content,
+		Address:  addressResult.Content,
+		Describe: describeResult.Content,
+		PostCode: param.PostCode,
+		PostName: postNameResult.Content,
+		// Introduction: introductionResult.Content,
+		// HostmanName:  hostmanNameResult.Content,
+		// HostmanThink: hostmanThinkResult.Content,
+		// Leixing:      leixingResult.Content,
 	}
 
 	hots := make([]entity.HotEnBody, 0)
@@ -544,6 +544,11 @@ func (a *AppService) appResp2Application(app *entity.AppResp) (*entity.Applicati
 
 	return param, nil
 }
+
+type detectRequest struct {
+	URL string `json:"url"`
+}
+
 func sceneExtract(textContent, correctStr string) bool {
 	data := map[string]string{
 		"text": textContent,
@@ -569,8 +574,9 @@ func sceneExtract(textContent, correctStr string) bool {
 	}
 
 	type respData struct {
-		Scenes []string `json:"scenes"`
-		Text   string   `json:"text"`
+		Scenes      []string           `json:"scenes"`
+		Text        string             `json:"text"`
+		ModelScores map[string]float64 `json:"model_scores"`
 	}
 
 	var ans respData
@@ -639,46 +645,69 @@ func (a *AppService) reqPicValid(ctx context.Context, app *entity.Application) (
 	}
 
 	urls := appPairStrs.Urls
-	log.Println(urls)
-	return true, nil
+	log.Println("处理图片URLs:", urls)
 
-	type reqData struct {
-		Url string `json:"url"`
-	}
 	for _, url := range urls {
+		// 创建请求数据
 		data := map[string]string{
 			"url": url,
 		}
-		req, err := json.Marshal(data)
+		jsonData, err := json.Marshal(data)
 		if err != nil {
-			log.Println(err)
+			log.Printf("JSON序列化失败: %v", err)
 			return false, err
 		}
 
-		reqUrl := ""
-		resp, err := http.Post(reqUrl, "application/json", bytes.NewBuffer(req))
+		// 记录将要发送的数据
+		log.Printf("请求数据: %s", string(jsonData))
+
+		// 使用Go的HTTP客户端发送请求
+		req, err := http.NewRequest("POST", "http://xjuoj.cn/detect", bytes.NewBuffer(jsonData))
 		if err != nil {
-			log.Printf("发送POST请求失败,错误信息: %v\n", err)
+			log.Printf("创建HTTP请求失败: %v", err)
 			return false, err
+		}
+		req.Header.Set("Content-Type", "application/json")
+
+		client := &http.Client{
+			Timeout: 30 * time.Second,
+		}
+		resp, err := client.Do(req)
+		if err != nil {
+			log.Printf("发送HTTP请求失败: %v", err)
+			return false, fmt.Errorf("发送detect服务请求失败: %v", err)
 		}
 		defer resp.Body.Close()
 
+		// 读取响应内容
 		body, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
-			log.Println(err)
+			log.Printf("读取响应失败: %v", err)
 			return false, err
 		}
 
+		log.Printf("响应状态码: %d", resp.StatusCode)
+		log.Printf("响应内容: %s", string(body))
+
+		// 解析响应
+		type modelScores struct {
+			Corvi2023            float64 `json:"Corvi2023"`
+			ClipdetLatent10kPlus float64 `json:"clipdet_latent10k_plus"`
+		}
+
 		type respData struct {
-			FusionScore float64 `json:"fusion_score"`
+			FusionScore float64     `json:"fusion_score"`
+			ModelScores modelScores `json:"model_scores"`
 		}
 
 		var ans respData
 		if err = json.Unmarshal(body, &ans); err != nil {
-			log.Println(err)
+			log.Println("JSON解析失败:", err)
 			return false, err
 		}
 
+		log.Println("----------------------------------")
+		log.Println(ans)
 		if ans.FusionScore > 0 {
 			return false, nil
 		}
@@ -725,13 +754,16 @@ func (a *AppService) reqOpenai(ctx context.Context, param *entity.Application, n
 		log.Println(completion.Choices[0].Message.Content)
 
 		now := completion.Choices[0].Message.Content
-		if now == name {
+		statusBool := sceneExtract(now, name)
+		if statusBool {
 			return true, nil
 		} else {
+			continue
 		}
 	}
 	return false, nil
 }
+
 func (a *AppService) checkValid(ctx context.Context, param entity.Application) entity.Status {
 	status := entity.StatusRefused
 	statusBool, err := a.reqOpenai(ctx, &param, param.Name)
@@ -746,6 +778,25 @@ func (a *AppService) checkValid(ctx context.Context, param entity.Application) e
 		return status
 	}
 
+	log.Println("开始提取实体")
+	statusBool = sceneExtract(param.Introduction, param.Name)
+	if statusBool {
+		status = entity.StatusAccepted
+	} else {
+		status = entity.StatusRefused
+		return status
+	}
+
+	log.Println("开始检测敏感词")
+	statusBool = scanMGword(param.Introduction)
+	if !statusBool {
+		status = entity.StatusRefused
+		return status
+	} else {
+		status = entity.StatusAccepted
+	}
+
+	log.Println("开始检测图片")
 	statusBool, err = a.reqPicValid(ctx, &param)
 	if err != nil {
 		log.Println(err)
@@ -756,22 +807,6 @@ func (a *AppService) checkValid(ctx context.Context, param entity.Application) e
 	} else {
 		status = entity.StatusRefused
 		return status
-	}
-
-	statusBool = sceneExtract(param.Introduction, param.Name)
-	if statusBool {
-		status = entity.StatusAccepted
-	} else {
-		status = entity.StatusRefused
-		return status
-	}
-
-	statusBool = scanMGword(param.Introduction)
-	if !statusBool {
-		status = entity.StatusRefused
-		return status
-	} else {
-		status = entity.StatusAccepted
 	}
 
 	return status
@@ -838,6 +873,9 @@ func (a *AppService) Create(ctx context.Context, param entity.AppResp, userId in
 		WorkBeginAt:  param.WorkBeginAt,
 		WorkEndAt:    param.WorkEndAt,
 		HaveVege:     param.HaveVege,
+		Status:       param.Status,
+		CreatedAt:    param.CreatedAt,
+		UpdatedAt:    param.UpdatedAt,
 		HostmanName:  param.HostmanName,
 		HostmanThink: param.HostmanThink,
 		Yuyue:        param.Yuyue,

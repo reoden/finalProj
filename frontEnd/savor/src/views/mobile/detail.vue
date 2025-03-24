@@ -38,7 +38,7 @@
           </div>
           <a-divider />
           <div class="describe">
-            <div class="title">餐厅介绍</div>
+            <div class="title">景点介绍</div>
             <div class="desc-content">
               <div class="desc" :class="{ all: !showIcon }">
                 {{  descValue }}
@@ -74,13 +74,13 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, onMounted } from 'vue';
-  import { useRouter } from 'vue-router';
-  import useLoading from '@/hooks/loading';
-  import HeaderModile from '@/components/header/mobile.vue';
   import SavorApi from '@/api/savor';
-  import addrImage from '@/assets/images/addr.png';
-  import timeImage from '@/assets/images/time.png';
+import addrImage from '@/assets/images/addr.png';
+import timeImage from '@/assets/images/time.png';
+import HeaderModile from '@/components/header/mobile.vue';
+import useLoading from '@/hooks/loading';
+import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
   const router = useRouter();
   const { loading, toggle: toggleLoading } = useLoading(false);

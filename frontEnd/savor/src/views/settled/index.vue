@@ -313,14 +313,14 @@
         direction="vertical"
         class="divider"
       />
-      <div v-if="!isView && !loading" class="example">
+      <!-- <div v-if="!isView && !loading" class="example">
         <div class="title">{{ $t('settled.con.example') }}</div>
         <ShopItem
           v-for="(item, index) in exampleList"
           :key="index"
           :data="item"
         />
-      </div>
+      </div> -->
       <div v-if="isView" class="right">
         <div
           >{{ $t('settled.detail.status') }} :{{ STATUS_MAP[form.status] }}</div
@@ -343,7 +343,6 @@ import Header from '@/components/header/index.vue';
 import { STATUS_MAP } from '@/config';
 import useLoading from '@/hooks/loading';
 import { isMoblie } from '@/utils';
-import ShopItem from '@/views/home/components/shop-item.vue';
 import { Message, Modal } from '@arco-design/web-vue';
 import { pcaa } from 'area-data';
 import { computed, onMounted, ref } from 'vue';
@@ -524,30 +523,30 @@ import Detail from './detail.vue';
 
   const exampleList = [
     {
-      id: 10,
-      name: '一起其他餐厅',
-      address: 'Xin',
+      id: 30,
+      name: '武当山',
+      address: '1111',
       describe: 'desc',
       status: 0,
       price: 150,
       option: 5.8,
     },
-    {
-      id: 8,
-      name: '遇外滩SKYLINE',
-      address: 'Shanghai',
-      describe: 'describe',
-      status: 0,
-      option: 8,
-    },
-    {
-      id: 7,
-      name: 'J Prime牛排海鲜',
-      address: 'Shanghai',
-      describe: 'describe',
-      status: 0,
-      option: 7,
-    },
+    // {
+    //   id: 8,
+    //   name: '遇外滩SKYLINE',
+    //   address: 'Shanghai',
+    //   describe: 'describe',
+    //   status: 0,
+    //   option: 8,
+    // },
+    // {
+    //   id: 7,
+    //   name: 'J Prime牛排海鲜',
+    //   address: 'Shanghai',
+    //   describe: 'describe',
+    //   status: 0,
+    //   option: 7,
+    // },
   ];
 
   const fetchData = async () => {

@@ -5,7 +5,7 @@
       <div class="search">
         <a-input-search
           v-model:model-value="inputVal"
-          placeholder="⼤中华餐饮年鉴，助⼒中餐成⻓"
+          placeholder="景点收集"
         >
           <template #suffix>
             <img class="search-icon" :src="SearchIcon" alt="" @click="searchVal()">
@@ -30,14 +30,14 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, onMounted } from 'vue';
-  import { useRouter } from 'vue-router';
   import { useDebounceFn } from '@vueuse/core';
+import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
-  import useLoading from '@/hooks/loading';
-  import HeaderModile from '@/components/header/mobile.vue';
   import SavorApi from '@/api/savor';
-  import SearchIcon from '@/assets/images/search.png';
+import SearchIcon from '@/assets/images/search.png';
+import HeaderModile from '@/components/header/mobile.vue';
+import useLoading from '@/hooks/loading';
 
   const router = useRouter();
   const inputVal = ref<any>('');

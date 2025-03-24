@@ -1,7 +1,7 @@
 <template>
   <div class="logo_cn" @click="goTo">
     <img :src="logoImage" alt="" />
-    <span>{{ en ? logoInfo.title : '餐厅年鉴' }}</span>
+    <span>{{ en ? logoInfo.title : '景点管理' }}</span>
   </div>
 </template>
 

@@ -35,13 +35,13 @@
     >
       {{ data.introduction }}
     </a-form-item>
-    <a-form-item
+    <!-- <a-form-item
       field="leixing"
       :label="$t('settled.form.leixing')"
       validate-trigger="blur"
     >
       {{ data.leixing }}
-    </a-form-item>
+    </a-form-item> -->
     <a-divider />
     <!-- <a-form-item
       field="describe"
@@ -139,13 +139,13 @@
     >
       {{ data.per }} {{ $t('settled.form.per.desc') }}
     </a-form-item>
-    <a-form-item field="have_vege" :label="$t('settled.form.have_vege')">
+    <!-- <a-form-item field="have_vege" :label="$t('settled.form.have_vege')">
       {{
         Number(data.have_vege) === 1
           ? $t('settled.form.have_vege.option1')
           : $t('settled.form.have_vege.option2')
       }}
-    </a-form-item>
+    </a-form-item> -->
   </a-form>
 </template>
 

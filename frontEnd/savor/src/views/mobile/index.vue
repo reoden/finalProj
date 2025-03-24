@@ -5,7 +5,7 @@
       <div class="search">
         <a-input-search
           v-model:model-value="inputVal"
-          placeholder="⼤中华餐饮年鉴，助⼒中餐成⻓"
+          placeholder="景点收集"
         >
           <template #suffix>
             <img class="search-icon" :src="SearchIcon" alt="" @click="searchVal()">
@@ -35,13 +35,13 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, onMounted } from 'vue';
-  import { useRouter } from 'vue-router';
-  import useLoading from '@/hooks/loading';
   import SavorApi from '@/api/savor';
-  import { useUserStore } from '@/store';
-  import SearchIcon from '@/assets/images/search_icon.png';
-  import HeaderModile from '@/components/header/mobile.vue';
+import SearchIcon from '@/assets/images/search_icon.png';
+import HeaderModile from '@/components/header/mobile.vue';
+import useLoading from '@/hooks/loading';
+import { useUserStore } from '@/store';
+import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
   const userInfo = useUserStore();
   const router = useRouter();
