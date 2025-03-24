@@ -113,7 +113,7 @@ export default {
   // 以下为后台部分，英文部分可以使用中文
   'backstage.login.title': '官方管理后台',
   'backstage.login.btn': '立即使用',
-  'menu.examine.title': '商家内容审核',
+  'menu.examine.title': '景点内容审核',
   'menu.position.title': '展示位管理',
   'menu.chef.title': '厨师管理',
   'menu.guest.title': '嘉宾管理',

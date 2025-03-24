@@ -147,7 +147,7 @@ export default {
   // 以下为后台部分，英文部分可以使用中文
   'backstage.login.title': '官方管理后台',
   'backstage.login.btn': '立即使用',
-  'menu.examine.title': '商家内容审核',
+  'menu.examine.title': '景点内容审核',
   'menu.position.title': '展示位管理',
   'menu.chef.title': '厨师管理',
   'menu.guest.title': '嘉宾管理',
@@ -155,8 +155,8 @@ export default {
   'menu.user.title': '管理员',
   'menu.position.subtitle': '首页banner设置',
 
-  'examine.colunm.id': '商家ID',
-  'examine.colunm.name': '商家名',
+  'examine.colunm.id': '景点ID',
+  'examine.colunm.name': '景点名',
   'examine.colunm.address': '景点地址',
   'examine.colunm.describe': '详细介绍',
   'examine.colunm.status': '当前状态',

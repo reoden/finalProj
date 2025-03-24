@@ -662,7 +662,7 @@ func (a *AppService) reqPicValid(ctx context.Context, app *entity.Application) (
 		log.Printf("请求数据: %s", string(jsonData))
 
 		// 使用Go的HTTP客户端发送请求
-		req, err := http.NewRequest("POST", "http://xjuoj.cn/detect", bytes.NewBuffer(jsonData))
+		req, err := http.NewRequest("POST", "http://sbyhy.xjuoj.cn/detect", bytes.NewBuffer(jsonData))
 		if err != nil {
 			log.Printf("创建HTTP请求失败: %v", err)
 			return false, err
@@ -766,16 +766,13 @@ func (a *AppService) reqOpenai(ctx context.Context, param *entity.Application, n
 
 func (a *AppService) checkValid(ctx context.Context, param entity.Application) entity.Status {
 	status := entity.StatusRefused
-	statusBool, err := a.reqOpenai(ctx, &param, param.Name)
-	if err != nil {
-		log.Println(err)
-		return entity.StatusRefused
-	}
-	if statusBool {
-		status = entity.StatusAccepted
-	} else {
+	log.Println("开始检测敏感词")
+	statusBool := scanMGword(param.Introduction)
+	if !statusBool {
 		status = entity.StatusRefused
 		return status
+	} else {
+		status = entity.StatusAccepted
 	}
 
 	log.Println("开始提取实体")
@@ -787,17 +784,8 @@ func (a *AppService) checkValid(ctx context.Context, param entity.Application) e
 		return status
 	}
 
-	log.Println("开始检测敏感词")
-	statusBool = scanMGword(param.Introduction)
-	if !statusBool {
-		status = entity.StatusRefused
-		return status
-	} else {
-		status = entity.StatusAccepted
-	}
-
 	log.Println("开始检测图片")
-	statusBool, err = a.reqPicValid(ctx, &param)
+	statusBool, err := a.reqPicValid(ctx, &param)
 	if err != nil {
 		log.Println(err)
 		return entity.StatusRefused
@@ -809,6 +797,18 @@ func (a *AppService) checkValid(ctx context.Context, param entity.Application) e
 		return status
 	}
 
+	log.Println("开始检测景点图片")
+	statusBool, err = a.reqOpenai(ctx, &param, param.Name)
+	if err != nil {
+		log.Println(err)
+		return entity.StatusRefused
+	}
+	if statusBool {
+		status = entity.StatusAccepted
+	} else {
+		status = entity.StatusRefused
+		return status
+	}
 	return status
 }
 
@@ -836,7 +836,7 @@ func (a *AppService) Create(ctx context.Context, param entity.AppResp, userId in
 	hotParams := make([]hotBody, 0)
 	n := len(param.Hot)
 
-	for i := 0; i < n; i++ {
+	for i := range n {
 		hotParams = append(hotParams, hotBody{
 			HotName: param.Hot[i].HotName,
 			HotPics: param.Hot[i].HotPics,

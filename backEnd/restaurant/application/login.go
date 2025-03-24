@@ -106,7 +106,7 @@ func (l *LoginService) AdminLogin(ctx context.Context, param domain.Login) (inte
 }
 
 func (l *LoginService) GetFetchingSeconds(ctx context.Context, phone string) (int64, error) {
-	leftSeconds, err := l.cacheService.TTLKey(ctx, fmt.Sprintf("fetch_seconds_%d", phone))
+	leftSeconds, err := l.cacheService.TTLKey(ctx, fmt.Sprintf("fetch_seconds_%s", phone))
 	if err != nil {
 		return 0, err
 	}
@@ -142,7 +142,7 @@ func (l *LoginService) SendCode(ctx context.Context, param domain.Login) (interf
 	}
 	code := common.RandDigit(6)
 
-	l.cacheService.SetKey(ctx, fmt.Sprintf("fetch_seconds_%d", phone), "1", 60)
+	l.cacheService.SetKey(ctx, fmt.Sprintf("fetch_seconds_%s", phone), "1", 60)
 	log.Println("==============", code, "=======================")
 	// resp, err := pkgs.SendMsg(phone, code)
 	// if err != nil {

@@ -14,7 +14,7 @@
         <a-button v-if="menu === 'prize'" @click="addPrize">增加大奖</a-button>
       </div>
       <div class="nameEdit" v-if="menu === 'prize'">
-        <div>菜单名修改</div>
+        <div>景点名修改</div>
         <a-input class="input" v-model="prizeName" :disabled="!isEdit"></a-input>
         <a-button @click="editName" :loading="editLoading">{{ isEdit ? '保存' : '编辑' }}</a-button>
       </div>
@@ -63,14 +63,14 @@
       </div>
     </div>
     <a-modal
-      v-model:visible="visible" title="选择商家"
+      v-model:visible="visible" title="选择景点"
       :closable="false" :width="431" :footer="false"
       modal-class="custom-modal" :render-to-body="false"
       @cancel="handleCancel"
     >
       <a-form :model="form" :label-col-props="{ span: 0 }" :wrapper-col-props="{ span: 24 }">
         <div style="margin-bottom: 16px;">展示位号：{{ positionList.length + 1 }}</div>
-        <div style="margin-bottom: 16px;">请输入商家ID或商家名</div>
+        <div style="margin-bottom: 16px;">请输入景点ID或景点名</div>
         <a-form-item field="app_id" label="">
           <a-select v-model="form.id" placeholder="ID是8位数字，或者商家名称" allow-search :filter-option="filterOption" @search="queryList">
             <a-option v-for="shop in shopList" :key="shop.id" :value="shop.id" :label="shop.name">{{ shop.name }}</a-option>
@@ -114,15 +114,15 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, onMounted, computed, reactive } from 'vue';
-  import { useI18n } from 'vue-i18n';
-  import Sortable from 'sortablejs'
-  import useLoading from '@/hooks/loading';
   import SavorApi from '@/api/savor';
-  import MenuBar from '@/components/menu-bar/index.vue';
-  import iconDropImage from '@/assets/images/icon-drop.png';
-  import { Message, Modal } from '@arco-design/web-vue';
-  import { useRouter } from 'vue-router';
+import iconDropImage from '@/assets/images/icon-drop.png';
+import MenuBar from '@/components/menu-bar/index.vue';
+import useLoading from '@/hooks/loading';
+import { Message, Modal } from '@arco-design/web-vue';
+import Sortable from 'sortablejs';
+import { computed, onMounted, reactive, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 
   const router = useRouter();
   const { t } = useI18n();

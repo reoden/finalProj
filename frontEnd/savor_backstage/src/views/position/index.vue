@@ -31,7 +31,7 @@
         >
       </div>
       <div v-if="menu === 'shop'" class="nameEdit">
-        <div>菜单名修改</div>
+        <div>景点名修改</div>
         <a-input v-model="appName" class="input" :disabled="!isEdit"></a-input>
         <a-button :loading="editLoading" @click="editName">{{
           isEdit ? '保存' : '编辑'
@@ -117,7 +117,7 @@
     </div>
     <a-modal
       v-model:visible="visible"
-      title="选择商家"
+      title="选择景点"
       :closable="false"
       :width="431"
       :footer="false"
@@ -133,11 +133,11 @@
         <div style="margin-bottom: 16px"
           >展示位号：{{ positionList.length + 1 }}</div
         >
-        <div style="margin-bottom: 16px">请输入商家ID或商家名</div>
+        <div style="margin-bottom: 16px">请输入景点ID或景点名</div>
         <a-form-item field="app_id" label="">
           <a-select
             v-model="form.id"
-            placeholder="ID是8位数字，或者商家名称"
+            placeholder="ID是8位数字，或者景点名称"
             allow-search
             :filter-option="filterOption"
             @search="queryList"

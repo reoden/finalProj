@@ -9,7 +9,7 @@
         <a-button @click="addGuest">增加嘉宾</a-button>
       </div>
       <div class="nameEdit">
-        <div>菜单名修改</div>
+        <div>景点名修改</div>
         <a-input class="input" v-model="guestName" :disabled="!isEdit"></a-input>
         <a-button @click="editName" :loading="editLoading">{{ isEdit ? '保存' : '编辑' }}</a-button>
       </div>
@@ -39,15 +39,15 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, onMounted, computed } from 'vue';
-  import { useI18n } from 'vue-i18n';
-  import Sortable from 'sortablejs'
-  import useLoading from '@/hooks/loading';
   import SavorApi from '@/api/savor';
-  import MenuBar from '@/components/menu-bar/index.vue';
-  import iconDropImage from '@/assets/images/icon-drop.png';
-  import { Message, Modal } from '@arco-design/web-vue';
-  import { useRouter } from 'vue-router';
+import iconDropImage from '@/assets/images/icon-drop.png';
+import MenuBar from '@/components/menu-bar/index.vue';
+import useLoading from '@/hooks/loading';
+import { Message, Modal } from '@arco-design/web-vue';
+import Sortable from 'sortablejs';
+import { computed, onMounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 
   const router = useRouter();
   const { t } = useI18n();
