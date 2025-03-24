@@ -3,12 +3,14 @@ package pkgs
 import (
 	"fmt"
 
+	"github.com/redis/go-redis/v9"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
 
 var _db *gorm.DB
+var _redis *redis.Client
 
 func InitDB() {
 	dsn := fmt.Sprintf("root:123456@tcp(%s:3306)/restaurant?charset=utf8mb4&parseTime=True&loc=Local", "localhost")
@@ -24,8 +26,18 @@ func InitDB() {
 	sqlDB, _ := _db.DB()
 	sqlDB.SetMaxOpenConns(50) // 设置数据库连接池最大连接数
 	sqlDB.SetMaxIdleConns(10)
+
+	_redis = redis.NewClient(&redis.Options{
+		Addr:     "localhost:6379",
+		Password: "",
+		DB:       0,
+	})
 }
 
 func GetDB() *gorm.DB {
 	return _db
+}
+
+func GetRedis() *redis.Client {
+	return _redis
 }

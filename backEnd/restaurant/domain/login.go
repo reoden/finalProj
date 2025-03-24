@@ -7,6 +7,7 @@ import (
 	"restaurant/pkgs/sferror"
 	"time"
 
+	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
 )
 
@@ -15,12 +16,14 @@ const (
 )
 
 type LoginRepo struct {
-	db *gorm.DB
+	db  *gorm.DB
+	rdb *redis.Client
 }
 
 func NewLoginRepo() *LoginRepo {
 	return &LoginRepo{
-		db: pkgs.GetDB(),
+		db:  pkgs.GetDB(),
+		rdb: pkgs.GetRedis(),
 	}
 }
 

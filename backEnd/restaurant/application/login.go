@@ -3,6 +3,7 @@ package application
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 	"restaurant/common"
 	"restaurant/domain"
@@ -19,6 +20,7 @@ type LoginService struct {
 	db               *domain.LoginRepo
 	account          *AccountService
 	verificationCode VerificationCodeService
+	cacheService     *CacheService
 }
 
 // NewLoginService
@@ -27,6 +29,7 @@ func NewLoginService() *LoginService {
 		db:               domain.NewLoginRepo(),
 		account:          NewAccountService(),
 		verificationCode: *NewVerificationCodeService(),
+		cacheService:     NewCacheService(),
 	}
 }
 
@@ -102,8 +105,28 @@ func (l *LoginService) AdminLogin(ctx context.Context, param domain.Login) (inte
 	}, nil
 }
 
+func (l *LoginService) GetFetchingSeconds(ctx context.Context, phone string) (int64, error) {
+	leftSeconds, err := l.cacheService.TTLKey(ctx, fmt.Sprintf("fetch_seconds_%d", phone))
+	if err != nil {
+		return 0, err
+	}
+
+	return leftSeconds, err
+}
+
 func (l *LoginService) SendCode(ctx context.Context, param domain.Login) (interface{}, error) {
 	phone := param.Phone
+
+	secTime, err := l.GetFetchingSeconds(ctx, phone)
+	if err != nil {
+		log.Println("GetFetchingSeconds error:", err)
+		return nil, err
+	}
+
+	if secTime > 0 {
+		return nil, errors.New("请等待" + fmt.Sprintf("%d", secTime) + "秒后再试")
+	}
+
 	data, err := l.verificationCode.GetCode(ctx, phone)
 	if err != nil {
 		return nil, err
@@ -118,6 +141,8 @@ func (l *LoginService) SendCode(ctx context.Context, param domain.Login) (interf
 		return nil, errors.New("今日该手机发送验证码次数已达上限")
 	}
 	code := common.RandDigit(6)
+
+	l.cacheService.SetKey(ctx, fmt.Sprintf("fetch_seconds_%d", phone), "1", 60)
 	log.Println("==============", code, "=======================")
 	// resp, err := pkgs.SendMsg(phone, code)
 	// if err != nil {
