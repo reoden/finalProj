@@ -11,7 +11,7 @@
           >
             {{ $t('menu.shop.subtitle') }}
           </div>
-          <div
+          <!-- <div
             class="menu"
             :class="{ selected: menu === 'banner' }"
             @click="changeMenu('banner')"
@@ -24,14 +24,14 @@
             @click="changeMenu('logo')"
           >
             {{ $t('menu.logo.subtitle') }}
-          </div>
+          </div> -->
         </div>
         <a-button v-if="menu === 'shop'" @click="addPosition"
           >增加展示位</a-button
         >
       </div>
       <div v-if="menu === 'shop'" class="nameEdit">
-        <div>景点名修改</div>
+        <div>景点页签修改</div>
         <a-input v-model="appName" class="input" :disabled="!isEdit"></a-input>
         <a-button :loading="editLoading" @click="editName">{{
           isEdit ? '保存' : '编辑'

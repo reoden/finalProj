@@ -9,7 +9,7 @@
         <a-button @click="addPosition">增加厨师</a-button>
       </div>
       <div class="nameEdit">
-        <div>景点名修改</div>
+        <div>景点页签修改</div>
         <a-input class="input" v-model="chefName" :disabled="!isEdit"></a-input>
         <a-button @click="editName" :loading="editLoading">{{ isEdit ? '保存' : '编辑' }}</a-button>
       </div>

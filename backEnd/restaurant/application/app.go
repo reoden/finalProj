@@ -1318,9 +1318,6 @@ func (as *AppService) DownloadDoc(ctx context.Context, userId, id int64) (string
 	run.AddText(fmt.Sprintf("景点名称:\t%s", params.Name))
 	run.AddBreak()
 
-	// run.AddText(fmt.Sprintf("餐厅类型:\t%s", params.Leixing))
-	// run.AddBreak()
-
 	run.AddText(fmt.Sprintf("门票价:\t%s", params.Per))
 	run.AddBreak()
 
@@ -1335,22 +1332,6 @@ func (as *AppService) DownloadDoc(ctx context.Context, userId, id int64) (string
 
 	run.AddText(fmt.Sprintf("营业时间:\t%s~%s", params.WorkBeginAt, params.WorkEndAt))
 	run.AddBreak()
-
-	// run.AddText(fmt.Sprintln("是否可以预约:\t"))
-	// if params.Yuyue == 1 {
-	// 	run.AddText("可以")
-	// } else {
-	// 	run.AddText("否")
-	// }
-	// run.AddBreak()
-
-	// run.AddText(fmt.Sprintln("是否有素食:\t"))
-	// if params.HaveVege == 1 {
-	// 	run.AddText("是")
-	// } else {
-	// 	run.AddText("否")
-	// }
-
 	run.AddText("置顶图片:")
 	run.AddBreak()
 
@@ -1401,115 +1382,6 @@ func (as *AppService) DownloadDoc(ctx context.Context, userId, id int64) (string
 	run.AddBreak()
 
 	run.AddText(fmt.Sprintf("简介:\t%s", params.Introduction))
-	// run.AddText(fmt.Sprintf("详细介绍:\t%s", params.Describe))
-
-	// tempHostDir := "../tempHostImages"
-	// os.MkdirAll(tempHostDir, os.ModePerm)
-	// defer os.RemoveAll(tempHostDir)
-
-	// hostImgs := []officedocCommon.ImageRef{}
-	// for i, url := range params.HostmanUrls {
-	// 	response, err := http.Get(url)
-	// 	if err != nil {
-	// 		log.Fatalf("Error downloading image: %v", err)
-	// 	}
-	// 	defer response.Body.Close()
-
-	// 	imgPath := filepath.Join(tempHostDir, filepath.Base(params.HostmanPics[i]))
-	// 	file, err := os.Create(imgPath)
-	// 	if err != nil {
-	// 		log.Fatalf("Error creating image file: %v", err)
-	// 	}
-	// 	defer file.Close()
-
-	// 	_, err = io.Copy(file, response.Body)
-	// 	if err != nil {
-	// 		log.Fatalf("Error saving image file: %v", err)
-	// 	}
-
-	// 	img, err := officedocCommon.ImageFromFile(imgPath)
-	// 	if err != nil {
-	// 		return "", fmt.Errorf("unable to create image: %s", err)
-	// 	}
-
-	// 	imgref, err := doc.AddImage(img)
-	// 	if err != nil {
-	// 		return "", err
-	// 	}
-	// 	hostImgs = append(hostImgs, imgref)
-	// }
-
-	// run.AddText(fmt.Sprintf("主理人名字:\t%s", params.HostmanName))
-	// run.AddBreak()
-
-	// for _, img := range hostImgs {
-	// 	inl, err := run.AddDrawingInline(img)
-	// 	if err != nil {
-	// 		return "", fmt.Errorf("unable to add inline image: %s", err)
-	// 	}
-	// 	inl.SetSize(2*measurement.Inch, 2*measurement.Inch)
-	// 	run.AddTab()
-	// }
-	// run.AddBreak()
-
-	// run.AddText(fmt.Sprintf("主理人理念:\t%s", params.HostmanThink))
-	// run.AddBreak()
-
-	// hotLen := len(params.Hot)
-
-	// for j := 0; j < hotLen; j++ {
-	// 	run.AddText(fmt.Sprintf("招牌菜 %d: \t%s", j, params.Hot[j].HotName))
-	// 	run.AddBreak()
-
-	// 	tempHotDir := fmt.Sprintf("../tempHotImages_%d", j+1)
-	// 	os.MkdirAll(tempHotDir, os.ModePerm)
-	// 	defer os.RemoveAll(tempHotDir)
-	// 	hotImgs := []officedocCommon.ImageRef{}
-	// 	for i, url := range params.Hot[j].HotPicUrls {
-	// 		response, err := http.Get(url)
-	// 		if err != nil {
-	// 			log.Fatalf("Error downloading image: %v", err)
-	// 		}
-	// 		defer response.Body.Close()
-
-	// 		imgPath := filepath.Join(tempHotDir, filepath.Base(params.Hot[j].HotPics[i]))
-	// 		file, err := os.Create(imgPath)
-	// 		if err != nil {
-	// 			log.Fatalf("Error creating image file: %v", err)
-	// 		}
-	// 		defer file.Close()
-
-	// 		_, err = io.Copy(file, response.Body)
-	// 		if err != nil {
-	// 			log.Fatalf("Error saving image file: %v", err)
-	// 		}
-
-	// 		img, err := officedocCommon.ImageFromFile(imgPath)
-	// 		if err != nil {
-	// 			return "", fmt.Errorf("unable to create image: %s", err)
-	// 		}
-
-	// 		imgref, err := doc.AddImage(img)
-	// 		if err != nil {
-	// 			return "", err
-	// 		}
-	// 		hotImgs = append(hotImgs, imgref)
-	// 	}
-
-	// 	for _, img := range hotImgs {
-	// 		inl, err := run.AddDrawingInline(img)
-	// 		if err != nil {
-	// 			return "", fmt.Errorf("unable to add inline image: %s", err)
-	// 		}
-	// 		inl.SetSize(2*measurement.Inch, 2*measurement.Inch)
-	// 		run.AddTab()
-	// 	}
-	// 	run.AddBreak()
-
-	// 	run.AddText(fmt.Sprintf("招牌菜描述:\t%s", params.Hot[j].HotDesc))
-	// 	run.AddBreak()
-	// }
-
 	saveFilePath := fmt.Sprintf("%s.docx", params.Name)
 	err = doc.SaveToFile(saveFilePath)
 	defer os.Remove(saveFilePath)

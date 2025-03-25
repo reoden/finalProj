@@ -14,7 +14,7 @@
         <a-button v-if="menu === 'prize'" @click="addPrize">增加大奖</a-button>
       </div>
       <div class="nameEdit" v-if="menu === 'prize'">
-        <div>景点名修改</div>
+        <div>景点页签修改</div>
         <a-input class="input" v-model="prizeName" :disabled="!isEdit"></a-input>
         <a-button @click="editName" :loading="editLoading">{{ isEdit ? '保存' : '编辑' }}</a-button>
       </div>
