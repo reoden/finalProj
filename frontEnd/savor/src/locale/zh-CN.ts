@@ -59,7 +59,7 @@ export default {
   'settled.form.have_vege.option1': '是',
   'settled.form.have_vege.option2': '否',
   'settled.form.btn1': '保存',
-  'settled.form.btn2': '提交审核',
+  'settled.form.btn2': '提交',
   'settled.detail.person': '人',
   'settled.form.rate': '评分',
   'settled.form.rate.placeholder': '请输入评分',

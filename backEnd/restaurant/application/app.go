@@ -769,7 +769,7 @@ func (a *AppService) checkValid(ctx context.Context, param entity.Application) e
 	log.Println("开始检测敏感词")
 	statusBool := scanMGword(param.Introduction)
 	if !statusBool {
-		status = entity.StatusRefused
+		status = entity.StatusMG
 		return status
 	} else {
 		status = entity.StatusAccepted
@@ -780,7 +780,7 @@ func (a *AppService) checkValid(ctx context.Context, param entity.Application) e
 	if statusBool {
 		status = entity.StatusAccepted
 	} else {
-		status = entity.StatusRefused
+		status = entity.StatusTxt
 		return status
 	}
 
@@ -788,12 +788,12 @@ func (a *AppService) checkValid(ctx context.Context, param entity.Application) e
 	statusBool, err := a.reqPicValid(ctx, &param)
 	if err != nil {
 		log.Println(err)
-		return entity.StatusRefused
+		return entity.StatusFakePic
 	}
 	if statusBool {
 		status = entity.StatusAccepted
 	} else {
-		status = entity.StatusRefused
+		status = entity.StatusFakePic
 		return status
 	}
 
@@ -801,12 +801,12 @@ func (a *AppService) checkValid(ctx context.Context, param entity.Application) e
 	statusBool, err = a.reqOpenai(ctx, &param, param.Name)
 	if err != nil {
 		log.Println(err)
-		return entity.StatusRefused
+		return entity.StatusPicTxt
 	}
 	if statusBool {
 		status = entity.StatusAccepted
 	} else {
-		status = entity.StatusRefused
+		status = entity.StatusPicTxt
 		return status
 	}
 	return status

@@ -43,70 +43,41 @@ class SelfAttention(nn.Module):
         out = torch.matmul(attention, value)
         return self.gamma * out + x
 
-class EnhancedClassifier(nn.Module):
-    """增强的分类头，使用多层感知机、注意力机制和Dropout来提高性能"""
+class CLIPWithSelfAttention(nn.Module):
+    """简化版CLIP模型，仅集成自注意力机制"""
     
-    def __init__(self, in_features, hidden_dim=512, num_classes=2, dropout_rate=0.3):
-        super(EnhancedClassifier, self).__init__()
-        self.mlp = nn.Sequential(
-            nn.Linear(in_features, hidden_dim),
-            nn.LayerNorm(hidden_dim),
-            nn.ReLU(),
-            nn.Dropout(dropout_rate),
-            nn.Linear(hidden_dim, hidden_dim // 2),
-            nn.LayerNorm(hidden_dim // 2),
-            nn.ReLU(),
-            nn.Dropout(dropout_rate)
-        )
-        self.attention = SelfAttention(hidden_dim // 2)
-        self.classifier = nn.Linear(hidden_dim // 2, num_classes)
-        
-    def forward(self, x):
-        # 如果x是特征图(2D或更高维度)，先将其展平
-        if len(x.shape) > 2:
-            batch_size = x.shape[0]
-            x = x.reshape(batch_size, -1)
-            
-        # 通过MLP网络
-        x = self.mlp(x)
-        
-        # 应用自注意力(需要调整形状)
-        if len(x.shape) == 2:
-            x = x.unsqueeze(1)  # [batch_size, 1, hidden_dim//2]
-            x = self.attention(x)
-            x = x.squeeze(1)    # [batch_size, hidden_dim//2]
-        
-        # 最终分类
-        return self.classifier(x)
-
-class EnhancedCLIPModel(nn.Module):
-    """增强的CLIP模型，结合了特征提取器和改进的分类头"""
-    
-    def __init__(self, feature_extractor, embedding_dim=512, hidden_dim=512, num_classes=2, dropout_rate=0.3):
-        super(EnhancedCLIPModel, self).__init__()
+    def __init__(self, feature_extractor, embedding_dim=512, num_classes=2, dropout_rate=0.3):
+        super().__init__()
         self.feature_extractor = feature_extractor
-        # 冻结特征提取器
         for param in self.feature_extractor.parameters():
             param.requires_grad = False
             
-        self.classifier = EnhancedClassifier(
-            embedding_dim, 
-            hidden_dim=hidden_dim,
-            num_classes=num_classes,
-            dropout_rate=dropout_rate
-        )
+        # 自注意力模块
+        self.self_attention = SelfAttention(embedding_dim)
         
+        # 新型分类头
+        self.classifier = nn.Sequential(
+            nn.Linear(embedding_dim, embedding_dim),
+            nn.LayerNorm(embedding_dim),
+            nn.ReLU(),
+            nn.Dropout(dropout_rate),
+            nn.Linear(embedding_dim, num_classes)
+        )
+
     def forward(self, x):
-        # 提取特征
+        # 特征提取
         with torch.no_grad():
-            features = self.feature_extractor(x)
+            features = self.feature_extractor(x)  # 假设输出形状 [batch, channels, h, w]
+            
+        # 转换为适合注意力的格式 [batch, seq_len, embedding_dim]
+        batch_size, C, H, W = features.shape
+        features = features.view(batch_size, C, -1).permute(2, 0, 1)  # [H*W, batch, C]
+        
+        # 应用自注意力
+        attn_features = self.self_attention(features)
+        
+        # 池化操作
+        pooled = attn_features.mean(dim=0)  # [batch, C]
         
         # 分类
-        return self.classifier(features)
-    
-    def unfreeze_last_layers(self):
-        """解冻特征提取器的最后几层以进行微调"""
-        # 这是一个示例，实际解冻的层应该根据特定的特征提取器结构定制
-        for name, param in self.feature_extractor.named_parameters():
-            if "layer4" in name or "layer3" in name:
-                param.requires_grad = True 
+        return self.classifier(pooled)

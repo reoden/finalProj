@@ -15,6 +15,10 @@ const (
 	StatusAccepted
 	StatusDeleted
 	StatusSaved
+	StatusMG
+	StatusFakePic
+	StatusTxt
+	StatusPicTxt
 )
 
 type Application struct {
